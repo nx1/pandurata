@@ -456,7 +456,7 @@ void surface_tetrads(double rr[], double tt[], double pp[],
     rho0,T_e0,Bmag0,wlo,whi,G_fact;
   long ibottom,ir,iph,jth_lo,jth_hi,kph,i,j;
   for (ibottom=0;ibottom<=1;ibottom++) {
-    printf("surface_tetrads ibottom irstart %d %d \n", ibottom, irstart);
+    printf("surface_tetrads ibottom irstart %ld %ld \n", ibottom, irstart);
     for (ir=irstart;ir<=Nr;ir++) {
       for (iph=0;iph<=Nph;iph++) {
 	part_x0[0]=0;
