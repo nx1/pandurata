@@ -7,4 +7,8 @@ in /data, we need to convert the ascii data to binary via
 compile Pandurata in the main directory via
 > make -f makepan
 > ./pandurata
+
+clean files using
+> make -f makepan clean
+
 This will generate a bunch of data files in /data
