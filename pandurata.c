@@ -152,11 +152,11 @@ int main(int argc, char* argv[])
     */
    
    start_time();
-   bigprint = 0;
+   bigprint = 0; 
    imageprint = 1;
    myid = 0;
    numprocs = 1;
-   indx = (int *)malloc(5*sizeof(double));
+   indx = (int *)malloc(5*sizeof(double)); // This is weird!?
    bdata = (double *)malloc(4*sizeof(double));
    adata = (double *)malloc(4*4*sizeof(double));
    xdata1 = (double *)malloc(5*sizeof(double));
@@ -393,6 +393,7 @@ int main(int argc, char* argv[])
    get_harm3d_data(rr,tt,pp,rho_ijk,T_ijk,bb_ijk,tau_ijk,ut_ijk,ur_ijk,uz_ijk,up_ijk,
                    diskbody_ik,sigtau_ik,Tdisk_ik,emtop_ik,embot_ik,reftop_ik,refbot_ik);
    printf("check\n");
+   getchar();
    /*
     T_e0 = 1e7;
     T_e = 1e7;
@@ -2079,23 +2080,21 @@ int main(int argc, char* argv[])
                            v_[j]=0;
                         }
                         //momentum, velocity of ZAMO at Rshell
-                        po_[0]=-1/sqrt(-g_up_ph[0][0]);
-                        v_[0]=g_up_ph[0][0]*po_[0];
-                        v_[3]=g_up_ph[0][3]*po_[0];
-                        bdata1[1]=kap1i;
-                        bdata1[2]=kap2i;
-                        bdata1[3]=0;
-                        bdata1[4]=0;
-                        adata1[1][1]=-aa*cos(t)*k_[1]+r*sin(t)*aa*k_[2];
-                        adata1[1][2]=aa*cos(t)*k_[0]-aa*sin(t)*sin(t)*k_[3];
-                        adata1[1][3]=r*sin(t)*((r2+a2)*k_[3]-aa*k_[0]);
-                        adata1[1][4]=a2*cos(t)*sin(t)*sin(t)*k_[1]+
-                        r*sin(t)*(-(r2+a2)*k_[2]);
-                        adata1[2][1]=r*(-k_[1])+a2*sin(t)*cos(t)*k_[2];
-                        adata1[2][2]=r*(k_[0]-aa*sin(t)*sin(t)*k_[3]);
-                        adata1[2][3]=aa*sin(t)*cos(t)*((r2+a2)*k_[3]-aa*k_[0]);
-                        adata1[2][4]=r*aa*sin(t)*sin(t)*k_[1]-
-                        aa*sin(t)*cos(t)*(-(r2+a2)*k_[2]);
+                        po_[0]= -1/sqrt(-g_up_ph[0][0]);
+                        v_[0] = g_up_ph[0][0]*po_[0];
+                        v_[3] = g_up_ph[0][3]*po_[0];
+                        bdata1[1] = kap1i;
+                        bdata1[2] = kap2i;
+                        bdata1[3] = 0;
+                        bdata1[4] = 0;
+                        adata1[1][1] = -aa * cos(t)*k_[1] + r*sin(t)*aa*k_[2];
+                        adata1[1][2] = aa*cos(t)*k_[0] - aa*sin(t)*sin(t)*k_[3];
+                        adata1[1][3] = r*sin(t) * ((r2+a2)*k_[3]-aa*k_[0]);
+                        adata1[1][4] = a2*cos(t)*sin(t)*sin(t)*k_[1] + r*sin(t)*(-(r2+a2)*k_[2]);
+                        adata1[2][1] = r*(-k_[1])+a2*sin(t)*cos(t) * k_[2];
+                        adata1[2][2] = r*(k_[0]-aa*sin(t)*sin(t) * k_[3]);
+                        adata1[2][3] = aa*sin(t)*cos(t)*((r2+a2) * k_[3]-aa*k_[0]);
+                        adata1[2][4] = r*aa*sin(t)*sin(t)*k_[1] - aa*sin(t)*cos(t)*(-(r2+a2)*k_[2]);
                         for (j=0;j<=3;j++) {
                            adata1[3][j+1]=p_[j];
                            adata1[4][j+1]=po_[j];
@@ -2158,14 +2157,14 @@ int main(int argc, char* argv[])
                               
                               //Intensity
                               if (Fe_phot >= 0) {
-                                 Ispec[index2(jth,elo)] += wlo*A_fact*Bnu_[iv];
-                                 Ispec[index2(jth,ehi)] += whi*A_fact*Bnu_[iv];
+                                 Ispec[index2(jth,elo)]         += wlo*A_fact*Bnu_[iv];
+                                 Ispec[index2(jth,ehi)]         += whi*A_fact*Bnu_[iv];
                                  Ispec_s[index3(jth,elo,isort)] += wlo*A_fact*Bnu_[iv];
                                  Ispec_s[index3(jth,ehi,isort)] += whi*A_fact*Bnu_[iv];
-                                 Ispecr[indexrth(ir,jth,elo)] += wlo*A_fact*Bnu_[iv];
-                                 Ispecr[indexrth(ir,jth,ehi)] += whi*A_fact*Bnu_[iv];
-                                 Ispecp[indexph(jth,jph,elo)] += wlo*A_fact*Bnu_[iv];
-                                 Ispecp[indexph(jth,jph,ehi)] += whi*A_fact*Bnu_[iv];
+                                 Ispecr[indexrth(ir,jth,elo)]   += wlo*A_fact*Bnu_[iv];
+                                 Ispecr[indexrth(ir,jth,ehi)]   += whi*A_fact*Bnu_[iv];
+                                 Ispecp[indexph(jth,jph,elo)]   += wlo*A_fact*Bnu_[iv];
+                                 Ispecp[indexph(jth,jph,ehi)]   += whi*A_fact*Bnu_[iv];
                                  if (isort == 1) {
                                     Rspecr[indexrth(ir,jth,elo)] += wlo*A_fact*Bnu_[iv];
                                     Rspecr[indexrth(ir,jth,ehi)] += whi*A_fact*Bnu_[iv];
@@ -2185,43 +2184,29 @@ int main(int argc, char* argv[])
                               //reduce deg by free-free absorption
                               //deg = degp*qnur[indexre(ir,iv)];
                               
-                              Qspec[index2(jth,elo)] += wlo*A_fact*Bnu_[iv]*deg*cos(2.*psi);
-                              Qspec[index2(jth,ehi)] += whi*A_fact*Bnu_[iv]*deg*cos(2.*psi);
-                              Qspecr[indexrth(ir,jth,elo)] += wlo*A_fact*Bnu_[iv]*deg*cos(2.*psi);
-                              Qspecr[indexrth(ir,jth,ehi)] += whi*A_fact*Bnu_[iv]*deg*cos(2.*psi);
-                              Qspec_s[index3(jth,elo,isort)] +=
-                              wlo*A_fact*Bnu_[iv]*deg*cos(2.*psi);
-                              Qspec_s[index3(jth,ehi,isort)] +=
-                              whi*A_fact*Bnu_[iv]*deg*cos(2.*psi);
+                              Qspec[index2(jth,elo)]         += wlo*A_fact*Bnu_[iv]*deg*cos(2.*psi);
+                              Qspec[index2(jth,ehi)]         += whi*A_fact*Bnu_[iv]*deg*cos(2.*psi);
+                              Qspecr[indexrth(ir,jth,elo)]   += wlo*A_fact*Bnu_[iv]*deg*cos(2.*psi);
+                              Qspecr[indexrth(ir,jth,ehi)]   += whi*A_fact*Bnu_[iv]*deg*cos(2.*psi);
+                              Qspec_s[index3(jth,elo,isort)] += wlo*A_fact*Bnu_[iv]*deg*cos(2.*psi);
+                              Qspec_s[index3(jth,ehi,isort)] += whi*A_fact*Bnu_[iv]*deg*cos(2.*psi);
                               //if (cos(yn[2]) > 0) {
                               if ((cos(yn[2]) > 0)||(TWO_SIDED >= 1)) {
-                                 Uspec[index2(jth,elo)] +=
-                                 wlo*A_fact*Bnu_[iv]*deg*sin(2.*psi);
-                                 Uspec[index2(jth,ehi)] +=
-                                 whi*A_fact*Bnu_[iv]*deg*sin(2.*psi);
-                                 Uspecr[indexrth(ir,jth,elo)] +=
-                                 wlo*A_fact*Bnu_[iv]*deg*sin(2.*psi);
-                                 Uspecr[indexrth(ir,jth,ehi)] +=
-                                 whi*A_fact*Bnu_[iv]*deg*sin(2.*psi);
-                                 Uspec_s[index3(jth,elo,isort)] +=
-                                 wlo*A_fact*Bnu_[iv]*deg*sin(2.*psi);
-                                 Uspec_s[index3(jth,ehi,isort)] +=
-                                 whi*A_fact*Bnu_[iv]*deg*sin(2.*psi);
+                                 Uspec[index2(jth,elo)]         += wlo*A_fact*Bnu_[iv]*deg*sin(2.*psi);
+                                 Uspec[index2(jth,ehi)]         += whi*A_fact*Bnu_[iv]*deg*sin(2.*psi);
+                                 Uspecr[indexrth(ir,jth,elo)]   += wlo*A_fact*Bnu_[iv]*deg*sin(2.*psi);
+                                 Uspecr[indexrth(ir,jth,ehi)]   += whi*A_fact*Bnu_[iv]*deg*sin(2.*psi);
+                                 Uspec_s[index3(jth,elo,isort)] += wlo*A_fact*Bnu_[iv]*deg*sin(2.*psi);
+                                 Uspec_s[index3(jth,ehi,isort)] += whi*A_fact*Bnu_[iv]*deg*sin(2.*psi);
                               }
                               //if (cos(yn[2]) < 0) {
                               if ((cos(yn[2]) < 0)&&(TWO_SIDED == 0)) {
-                                 Uspec[index2(jth,elo)] +=
-                                 wlo*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
-                                 Uspec[index2(jth,ehi)] +=
-                                 whi*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
-                                 Uspecr[indexrth(ir,jth,elo)] +=
-                                 wlo*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
-                                 Uspecr[indexrth(ir,jth,ehi)] +=
-                                 whi*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
-                                 Uspec_s[index3(jth,elo,isort)] +=
-                                 wlo*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
-                                 Uspec_s[index3(jth,ehi,isort)] +=
-                                 whi*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
+                                 Uspec[index2(jth,elo)]         += wlo*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
+                                 Uspec[index2(jth,ehi)]         += whi*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
+                                 Uspecr[indexrth(ir,jth,elo)]   += wlo*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
+                                 Uspecr[indexrth(ir,jth,ehi)]   += whi*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
+                                 Uspec_s[index3(jth,elo,isort)] += wlo*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
+                                 Uspec_s[index3(jth,ehi,isort)] += whi*A_fact*Bnu_[iv]*deg*sin(-2.*psi);
                               }
                               if (Eph < nu_cut)
                                  Iobs[indexph(jth,jph,jt)]+= A_fact*Bnu_[iv]*dnu0[elo];
@@ -2258,21 +2243,15 @@ int main(int argc, char* argv[])
                                     //if (iv == 100) printf("%g %g %g %d %d %d\n",A_fact,Bnu_[iv],dnui0[elo],jph,ix,iy);
                                     //if (cos(yn[2]) >= 0) {
                                     if ((cos(yn[2]) >= 0)||(TWO_SIDED >= 1)) {
-                                       spcimage[indexspci(jth,Ni-ix,Ni-iy,je)] +=
-                                       A_fact*Bnu_[iv]*dnui0[elo];
-                                       spcimagex[indexspci(jth,Ni-ix,Ni-iy,je)] +=
-                                       A_fact*Bnu_[iv]*dnui0[elo]*deg*cos(2.*psi);
-                                       spcimagey[indexspci(jth,Ni-ix,Ni-iy,je)] +=
-                                       A_fact*Bnu_[iv]*dnui0[elo]*deg*sin(2.*psi);
+                                       spcimage[indexspci(jth,Ni-ix,Ni-iy,je)]  += A_fact*Bnu_[iv]*dnui0[elo];
+                                       spcimagex[indexspci(jth,Ni-ix,Ni-iy,je)] += A_fact*Bnu_[iv]*dnui0[elo]*deg*cos(2.*psi);
+                                       spcimagey[indexspci(jth,Ni-ix,Ni-iy,je)] += A_fact*Bnu_[iv]*dnui0[elo]*deg*sin(2.*psi);
                                     }
                                     //if (cos(yn[2]) < 0) {
                                     if ((cos(yn[2]) < 0)&&(TWO_SIDED == 0)) {
-                                       spcimage[indexspci(jth,Ni-ix,iy,je)] +=
-                                       A_fact*Bnu_[iv]*dnui0[elo];
-                                       spcimagex[indexspci(jth,Ni-ix,iy,je)] +=
-                                       A_fact*Bnu_[iv]*dnui0[elo]*deg*cos(2.*psi);
-                                       spcimagey[indexspci(jth,Ni-ix,iy,je)] +=
-                                       A_fact*Bnu_[iv]*dnui0[elo]*deg*sin(-2.*psi);
+                                       spcimage[indexspci(jth,Ni-ix,iy,je)]  += A_fact*Bnu_[iv]*dnui0[elo];
+                                       spcimagex[indexspci(jth,Ni-ix,iy,je)] += A_fact*Bnu_[iv]*dnui0[elo]*deg*cos(2.*psi);
+                                       spcimagey[indexspci(jth,Ni-ix,iy,je)] += A_fact*Bnu_[iv]*dnui0[elo]*deg*sin(-2.*psi);
                                     }
                                  }
                               }
@@ -2309,19 +2288,15 @@ int main(int argc, char* argv[])
                               //printf("%g %d %d %d %d\n",cos(y2[2]),jth,jph,ix,iy);
                               //if (cos(yn[2]) >= 0) {
                               if ((cos(yn[2]) >= 0)||(TWO_SIDED >= 1)) {
-                                 image[indexi(jth,Ni-ix,Ni-iy)] += Iobs[indexph(jth,jph,jt)];
-                                 imagex[indexi(jth,Ni-ix,Ni-iy)] +=
-                                 Iobs[indexph(jth,jph,jt)]*deg*cos(2.*psi);
-                                 imagey[indexi(jth,Ni-ix,Ni-iy)] +=
-                                 Iobs[indexph(jth,jph,jt)]*deg*sin(2.*psi);
+                                 image[indexi(jth,Ni-ix,Ni-iy)]  += Iobs[indexph(jth,jph,jt)];
+                                 imagex[indexi(jth,Ni-ix,Ni-iy)] += Iobs[indexph(jth,jph,jt)]*deg*cos(2.*psi);
+                                 imagey[indexi(jth,Ni-ix,Ni-iy)] += Iobs[indexph(jth,jph,jt)]*deg*sin(2.*psi);
                               }
                               //if (cos(yn[2]) < 0) {
                               if ((cos(yn[2]) < 0)&&(TWO_SIDED == 0)) {
-                                 image[indexi(jth,Ni-ix,iy)] += Iobs[indexph(jth,jph,jt)];
-                                 imagex[indexi(jth,Ni-ix,iy)] +=
-                                 Iobs[indexph(jth,jph,jt)]*deg*cos(2.*psi);
-                                 imagey[indexi(jth,Ni-ix,iy)] +=
-                                 Iobs[indexph(jth,jph,jt)]*deg*(-sin(2.*psi));
+                                 image[indexi(jth,Ni-ix,iy)]  += Iobs[indexph(jth,jph,jt)];
+                                 imagex[indexi(jth,Ni-ix,iy)] += Iobs[indexph(jth,jph,jt)]*deg*cos(2.*psi);
+                                 imagey[indexi(jth,Ni-ix,iy)] += Iobs[indexph(jth,jph,jt)]*deg*(-sin(2.*psi));
                               }
                            }
                            if ((jth==10)&&(jph==0)) {
