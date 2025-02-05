@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
    imageprint = 1;
    myid = 0;
    numprocs = 1;
-   indx = (int *)malloc(5*sizeof(double)); // This is weird!?
+   indx = (int *)malloc(5*sizeof(int)); // This was originally sizeof(double) surely that is wrong!?
    bdata = (double *)malloc(4*sizeof(double));
    adata = (double *)malloc(4*4*sizeof(double));
    xdata1 = (double *)malloc(5*sizeof(double));
