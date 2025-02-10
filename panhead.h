@@ -5,33 +5,42 @@
 #include <math.h>
 //#include "mpi.h"
 
-#define M 1.0
-#define aa 0.9
-#define Rhor M+sqrt(M*M-aa*aa)
-#define Mstar 2.21
+#define M 1.0                  // CO Mass in M_sol
+#define aa 0.9                 // CO spin
+#define Rhor M+sqrt(M*M-aa*aa) // Radius of outer Event Horizon (Kerr BH) (Rg) (inner is M - sqrt)
+#define Mstar 2.21             //  
 //#define Mdot_17 8.3
-#define L_Edd 1.0
+#define L_Edd 1.0              // Eddington Luminosity (used for Mdot calc in nt_spectrum)
 //scale_height = 1.0
-#define Rin 0.9*Rhor
-#define Rout 1000.
+#define Rin 0.9*Rhor           // Inner Disk Radius
+#define Rout 1000.             // Outer disc Radius
 //surface and Temp smoothed
-#define del_eta 0.0
-#define nt_alpha 0.1
-#define tau_es 100.0
-#define T_cor 100.0 //corona temp in keV
-#define scale_height 0.2
-//1 for line emission, 2 for N-T thermal blackbody, 3 for R^{-3/4} thermal BB
-#define atm_model 4
-#define Nclumps 10000
-#define overdensity 10.0
-#define OPT_THIN 0.0
-#define TWO_SIDED 1.0
-#define GEOM_FAC 1.0 // Factor to correct for any assumed symmetries in simulation domain (4.0 if \phi domain only covers \pi/2)
-#define em_model 2.0
+
+#define del_eta 0.0            // Related to Fe line calc if 0 don't do them
+                               // also used in nom_eff in nt_spectrum
+#define nt_alpha 0.1           // alpha (viscosity) parameter?
+#define tau_es 100.0           // Thomson scattering optical depth (>>1 very optically thick)
+#define T_cor 100.0            // Corona temp in keV
+#define scale_height 0.2       // (unused) Disk scale height
+#define atm_model 4            // (unused) 
+#define Nclumps 10000          // (unused) Sets the number of x_clumns and r_clumps
+#define overdensity 10.0       // (unused)
+#define OPT_THIN 0.0           // 1 if disk is optically thin 0 if optically thick
+#define TWO_SIDED 1.0          // 0 if onesided, 1 if twosided disk
+#define GEOM_FAC 1.0           // Factor to correct for any assumed 
+                               // symmetries in simulation domain 
+                               // (4.0 if \phi domain only covers \pi/2)
+
+
+// 1 for line emission, 2 for N-T thermal blackbody, 3 for R^{-3/4} thermal BB
+// 1 : Line Emission   2=> Thermal Emission  >= 20 Thermal Cyclotron & Synchrotron & Bremstrahlung
+// setting em_model to 1.5 or 3.5 will set Redge = Rin otherwise it will use Redge = Risco
+// using 1 will also make spec_model use a linear energy scale > 1 will use a log scale.
+#define em_model 2.0 // Emission Model (see above)
 #define RUN_ID 624 //10 //1250
 
-#define N 10
-#define Ne 100
+#define N 10   // Grid resolution 
+#define Ne 100 // 
 #define Nr 95 //47 //179
 #define Nth 63 //31 //159
 #define Nph 47 //31 //63
@@ -41,6 +50,7 @@
 #define Nth_obs 40
 #define Ne_obs 10
 
+// Physical Constants (cgs)
 #define PI 3.14159265358979323846
 #define kB 1.38e-16
 #define kB_ev 8.6173e-5
@@ -76,8 +86,6 @@ double F_cycl(double x, double T_e);
 double lookup_Pnorm(double Pnorm[], double T_[], double T_e, int N_T);
 void calc_Pnorm_T(double Pnorm[], double T[], int N_T);
 void m_mult3(double A[3][3], double B[3][3], double C[3][3]);
-
-  
 
 /****************VECTOR_MATH.C***********************************/
 double calc_mag(double x[]);

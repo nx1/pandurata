@@ -8,19 +8,18 @@ double F_sync(double x)
 {
    double Ftot,Flo,Fhi,gam_13;
    gam_13 = 2.67894;
-   Flo = 4*PI/sqrt(3.)/gam_13*pow(x/2.,1./3.)*
-   (1.-gam_13/2.*pow(x/2.,2./3.)+3./4.*(x*x/4.));
-   Fhi = sqrt(PI/2.)*exp(-x)*sqrt(x)*(1.+55./72./x);
-   Ftot = Flo*(exp(-x*x))+Fhi*(1.-exp(-x*x));
-   Ftot = Ftot/1.138; //fix normalization
+   Flo = 4*PI/sqrt(3.) / gam_13*pow(x/2.,1./3.) * (1.-gam_13/2.*pow(x/2.,2./3.)+3./4.*(x*x/4.));
+   Fhi = sqrt(PI/2.) * exp(-x) * sqrt(x) * (1.+55./72./x);
+   Ftot = Flo*(exp(-x*x)) + Fhi*(1.-exp(-x*x));
+   Ftot = Ftot / 1.138; //fix normalization
    return Ftot;
 }
 
-//T_e corona temp in keV
+// T_e corona temp in keV
 double F_cycl(double x, double T_e)
 {
    double Ftot;
-   Ftot = sqrt(1./x-1.)*exp(-511./T_e*(1./x-1.));
+   Ftot = sqrt(1./x-1.) * exp(-511./T_e*(1./x-1.));
    return Ftot;
 }
 
@@ -84,27 +83,26 @@ void m_mult3(double A[3][3], double B[3][3], double C[3][3])
 
 int main(int argc, char* argv[])
 {
-   double t,r,dth,dph,f,dt,cth,sth,cth2,sth2,phi,ph0,ph2,mu,mu0,err,x,
-   I_ll,I_rr,U_,f_new,f_old,dcth,Ncth,th0,wc,nuc,Bmag,gam2,P0,dl,
+   double t,r,dth,dph,f,dt,cth,sth,sth2,cth2,phi,ph0,mu,mu0,err,x,
+   I_ll,I_rr,U_,f_new,f_old,dcth,th0,wc,nuc,Bmag,gam2,P0,dl,
    y[8],y1[8],y2[8],yn[8],del[8],y_ck[8],del_ck[8],e_x[3],e_y[3],
-   x_[3],p_0[3],p_x[3],p_y[3],p_hat[3],r_hat[3],n_hat[3],f_hat[3],fp_hat[3],z_hat[3],
+   x_[3],p_hat[3],r_hat[3],n_hat[3],f_hat[3],fp_hat[3],z_hat[3],
    part_x0[4],part_x[4],part_p[4],part_v[4],part_v_hat[4],f0_[4],f_i[4],f_[4],
-   ph_p[4],ph_v[4],ph_v_hat[4],ph_v_p[4],ph_p_p[4],v_[4],p_[4],po_[4],k_[4],
+   ph_p[4],ph_v[4],ph_v_hat[4],ph_v_p[4],v_[4],p_[4],po_[4],k_[4],
    f_v_hat[4],dx_r[4],dx_th[4],dx_p[4],
-   g_up[4][4],g_dn[4][4],lambda_hat[4][4],lam2_hat[4][4],
+   g_up[4][4],g_dn[4][4],
    g_up_ph[4][4],g_dn_ph[4][4],e_lf[4][4],w_lf[4][4],e_lfs[4][4],w_lfs[4][4],
    e_lf2[4][4],w_lf2[4][4],
    e_perp[3],e_parl[3],e_perp_f[3],e_parl_f[3],e_x_hat[3],e_y_hat[3],
    e_z_hat[3],n_p_hat[3],
    nu0[Ne+1],nu[Ne+1],dnu0[Ne+1],dnu[Ne+1],rr[Nr+1],drr[Nr+1],rrb[Nr+2],
-   ntA[Nr+1],ntB[Nr+1],ntC[Nr+1],ntD[Nr+1],ntE[Nr+1],ntF[Nr+1],ntG[Nr+1],
    ntT[Nr+1],nui0[Ne_obs+1],dnui0[Ne_obs+1],
-   tt[Nth+1],pp[Nph+1],dtt[Nth+1],dpp[Nph+1],weights[12],wght,
-   Risco,Z1,Z2,R_g,tau_tot,tau_tt,l_tot,za,zb,zc,s1,s2,zq,mu_p,beta,eta,cpsi,spsi,
+   tt[Nth+1],pp[Nph+1],weights[12],wght,
+   Risco,Z1,Z2,R_g,tau_tot,tau_tt,l_tot,za,zb,zc,s1,s2,zq,beta,eta,cpsi,spsi,
    T_e,T_e0,T_d,T_d0,rho0,rho,n_e,rdsh,rdsh3,f_hard,flux,flux2,
    kap10,kap20,kap1i,kap2i,normf,cth0,deg,psi,Rout_flux,
-   e_min,e_max,phase,tp,E_i,E_f,E_abs,E_em,Rring,Redge,dR,A_fact,A_fact2,
-   L_fact,B_fact,G_fact,T_fact,D_fact,V_fact,V_tot,h_fact,
+   e_min,e_max,E_i,E_f,E_abs,E_em,Redge,dR,A_fact,A_fact2,
+   B_fact,G_fact,T_fact,D_fact,V_fact,V_tot,h_fact,
    I_p,U_p,Q_p,psip,degp,Omg_d,Eph,f_Fe,N_Fe,sig_edge,
    Ecirc,Lcirc,Eisco,Lisco,rdot,phidot,pow_i,pow_f,rdsh0,
    pro,Rshell,dtau,dtau_es,kapp_es,r_es,rho_bar,R_atm,dR_atm,
@@ -156,122 +154,135 @@ int main(int argc, char* argv[])
    imageprint = 1;
    myid = 0;
    numprocs = 1;
-   indx = (int *)malloc(5*sizeof(int)); // This was originally sizeof(double) surely that is wrong!?
-   bdata = (double *)malloc(4*sizeof(double));
-   adata = (double *)malloc(4*4*sizeof(double));
+   indx   = (int *)malloc(5*sizeof(int));
+   bdata  = (double *)malloc(4*sizeof(double));
+   adata  = (double *)malloc(4*4*sizeof(double));
    xdata1 = (double *)malloc(5*sizeof(double));
    bdata1 = (double *)malloc(5*sizeof(double));
    adata1 = calloc(5,sizeof(double *));
    for (i=0;i<5;i++) adata1[i]=calloc(5,sizeof(double));
-   Iobs = (double *)malloc((Nth_obs+1)*(Nt+1)*(Nph_obs+1)*sizeof(double));
-   Ispec = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
-   Qspec = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
-   Uspec = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
-   Ispec_s = (double *)malloc((Nth_obs+1)*(Ne+1)*6*sizeof(double));
-   Qspec_s = (double *)malloc((Nth_obs+1)*(Ne+1)*6*sizeof(double));
-   Uspec_s = (double *)malloc((Nth_obs+1)*(Ne+1)*6*sizeof(double));
-   Ispecr = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
-   Rspecr = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
-   Qspecr = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
-   Uspecr = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
-   Cspecr = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
-   Ispecp = (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ne+1)*sizeof(double));
-   Lspec = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
-   Rspec = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
-   Inur = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
-   Inur_NT = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
-   qnur = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
-   R_pass = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
-   y_pass = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
-   l_pass = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
-   I_r = (double *)malloc((Nr+1)*sizeof(double));
-   I_rph = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
-   B_factr = (double *)malloc((Nr+1)*sizeof(double));
-   G_factr = (double *)malloc((Nr+1)*sizeof(double));
-   L_factr = (double *)malloc((Nr+1)*sizeof(double));
-   T_factr = (double *)malloc((Nr+1)*sizeof(double));
-   I_pass = (double *)malloc((Nr+1)*sizeof(double));
-   x_clumps = (double *)malloc((Nclumps+1)*3*sizeof(double));
-   r_clumps = (double *)malloc((Nclumps+1)*sizeof(double));
-   rho_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   T_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   bb_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   tau_ijk = (double *)malloc((Nr+1)*(Nth+2)*(Nph+1)*sizeof(double));
-   ut_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   ur_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   uz_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   up_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   corpow_ijk = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
-   diskbody_ik = (int *)malloc((Nr+1)*(Nph+1)*sizeof(int));
-   sigtau_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
-   Tdisk_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
-   emtop_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
-   embot_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
-   reftop_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
-   refbot_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
-   emtop_elf_ik = (double *)malloc((Nr+1)*(Nph+1)*4*4*sizeof(double));
-   embot_elf_ik = (double *)malloc((Nr+1)*(Nph+1)*4*4*sizeof(double));
+
+   Iobs          = (double *)malloc((Nth_obs+1)*(Nt+1)*(Nph_obs+1)*sizeof(double));
+   Ispec         = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
+   Qspec         = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
+   Uspec         = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
+
+   Ispec_s       = (double *)malloc((Nth_obs+1)*(Ne+1)*6*sizeof(double));
+   Qspec_s       = (double *)malloc((Nth_obs+1)*(Ne+1)*6*sizeof(double));
+   Uspec_s       = (double *)malloc((Nth_obs+1)*(Ne+1)*6*sizeof(double));
+
+   Ispecr        = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
+   Rspecr        = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
+   Qspecr        = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
+   Uspecr        = (double *)malloc((Nr+1)*(Nth_obs+1)*(Ne+1)*sizeof(double));
+
+   Cspecr        = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
+   Ispecp        = (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ne+1)*sizeof(double));
+   Lspec         = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
+
+   Rspec         = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
+   Inur          = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
+   Inur_NT       = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
+   qnur          = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
+   R_pass        = (double *)malloc((Nr+1)*(Ne+1)*sizeof(double));
+
+   y_pass        = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
+   l_pass        = (double *)malloc((Nth_obs+1)*(Ne+1)*sizeof(double));
+
+   I_r           = (double *)malloc((Nr+1)*sizeof(double));
+   I_rph         = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+
+   B_factr       = (double *)malloc((Nr+1)*sizeof(double));
+   G_factr       = (double *)malloc((Nr+1)*sizeof(double));
+   L_factr       = (double *)malloc((Nr+1)*sizeof(double));
+   T_factr       = (double *)malloc((Nr+1)*sizeof(double));
+   I_pass        = (double *)malloc((Nr+1)*sizeof(double));
+
+   x_clumps      = (double *)malloc((Nclumps+1)*3*sizeof(double));
+   r_clumps      = (double *)malloc((Nclumps+1)*sizeof(double));
+
+   tau_ijk       = (double *)malloc((Nr+1)*(Nth+2)*(Nph+1)*sizeof(double));
+   rho_ijk       = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+   T_ijk         = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+   bb_ijk        = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+   ut_ijk        = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+   ur_ijk        = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+   uz_ijk        = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+   up_ijk        = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+   corpow_ijk    = (double *)malloc((Nr+1)*(Nth+1)*(Nph+1)*sizeof(double));
+
+   diskbody_ik   = (int *)malloc((Nr+1)*(Nph+1)*sizeof(int));
+   sigtau_ik     = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+   Tdisk_ik      = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+   emtop_ik      = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+   embot_ik      = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+   reftop_ik     = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+   refbot_ik     = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+
+   emtop_elf_ik  = (double *)malloc((Nr+1)*(Nph+1)*4*4*sizeof(double));
+   embot_elf_ik  = (double *)malloc((Nr+1)*(Nph+1)*4*4*sizeof(double));
    reftop_elf_ik = (double *)malloc((Nr+1)*(Nph+1)*4*4*sizeof(double));
    refbot_elf_ik = (double *)malloc((Nr+1)*(Nph+1)*4*4*sizeof(double));
+
    Gtop_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
    Gbot_ik = (double *)malloc((Nr+1)*(Nph+1)*sizeof(double));
+
+
+   // Initialize Arrays (probably could just calloc() these)
    if (imageprint == 1) {
-      image = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
-      imagex = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
-      imagey = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
-      spcimage =
-      (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*(Ne_obs+1)*sizeof(double));
-      spcimagex =
-      (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*(Ne_obs+1)*sizeof(double));
-      spcimagey =
-      (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*(Ne_obs+1)*sizeof(double));
-      phimage =
-      (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
-      phimagex =
-      (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
-      phimagey =
-      (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
+      image     = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
+      imagex    = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
+      imagey    = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
+
+      spcimage  = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*(Ne_obs+1)*sizeof(double));
+      spcimagex = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*(Ne_obs+1)*sizeof(double));
+      spcimagey = (double *)malloc((Nth_obs+1)*(Ni+1)*(Ni+1)*(Ne_obs+1)*sizeof(double));
+
+      phimage   = (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
+      phimagex  = (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
+      phimagey  = (double *)malloc((Nth_obs+1)*(Nph_obs+1)*(Ni+1)*(Ni+1)*sizeof(double));
+
       for (it=0;it<=Nth_obs;it++) {
-         for (ix=0;ix<=Ni;ix++) {
-            for (iy=0;iy<=Ni;iy++) {
-               image[indexi(it,ix,iy)]=0;
-               imagex[indexi(it,ix,iy)]=0;
-               imagey[indexi(it,ix,iy)]=0;
-               for (je=0;je<=Ne_obs;je++) {
-                  spcimage[indexspci(it,ix,iy,je)]=0;
-                  spcimagex[indexspci(it,ix,iy,je)]=0;
-                  spcimagey[indexspci(it,ix,iy,je)]=0;
+          for (ix=0;ix<=Ni;ix++) {
+              for (iy=0;iy<=Ni;iy++) {
+                  image[indexi(it,ix,iy)]  = 0;
+                  imagex[indexi(it,ix,iy)] = 0;
+                  imagey[indexi(it,ix,iy)] = 0;
+                  for (je=0;je<=Ne_obs;je++) {
+                      spcimage[indexspci(it,ix,iy,je)]  = 0;
+                      spcimagex[indexspci(it,ix,iy,je)] = 0;
+                      spcimagey[indexspci(it,ix,iy,je)] = 0;
                }
                for (jph=0;jph<=Nph_obs;jph++) {
-                  phimage[indexphi(it,jph,ix,iy)]=0;
-                  phimagex[indexphi(it,jph,ix,iy)]=0;
-                  phimagey[indexphi(it,jph,ix,iy)]=0;
+                   phimage[indexphi(it,jph,ix,iy)]  = 0;
+                   phimagex[indexphi(it,jph,ix,iy)] = 0;
+                   phimagey[indexphi(it,jph,ix,iy)] = 0;
                }
             }
          }
       }
    }
    for (it=0;it<=Nth_obs;it++) {
-      for (je=0;je<=Ne;je++) {
-         Ispec[index2(it,je)]=0;
-         Lspec[index2(it,je)]=0;
-         Qspec[index2(it,je)]=0;
-         Uspec[index2(it,je)]=0;
-         for (ir=0;ir<=Nr;ir++) {
-            Ispecr[indexrth(ir,it,je)]=0;
-            Rspecr[indexrth(ir,it,je)]=0;
-            Qspecr[indexrth(ir,it,je)]=0;
-            Uspecr[indexrth(ir,it,je)]=0;
-         }
-      }
-      for (jph=0;jph<=Nph_obs;jph++) {
-         for (jt=0;jt<=Nt;jt++) {
-            Iobs[indexph(it,jph,jt)]=0;
-         }
-         for (je=0;je<=Ne;je++) {
-            Ispecp[indexph(it,jph,je)]=0;
-         }
-      }
+       for (je=0;je<=Ne;je++) {
+           Ispec[index2(it,je)] = 0;
+           Lspec[index2(it,je)] = 0;
+           Qspec[index2(it,je)] = 0;
+           Uspec[index2(it,je)] = 0;
+           for (ir=0;ir<=Nr;ir++) {
+               Ispecr[indexrth(ir,it,je)] = 0;
+               Rspecr[indexrth(ir,it,je)] = 0;
+               Qspecr[indexrth(ir,it,je)] = 0;
+               Uspecr[indexrth(ir,it,je)] = 0;
+           }
+       }
+       for (jph=0;jph<=Nph_obs;jph++) {
+           for (jt=0;jt<=Nt;jt++) {
+               Iobs[indexph(it,jph,jt)] = 0;
+           }
+           for (je=0;je<=Ne;je++) {
+               Ispecp[indexph(it,jph,je)] = 0;
+           }
+       }
    }
    for (ir=0;ir<=Nr;ir++) {
       for (je=0;je<=Ne;je++) {
@@ -284,43 +295,42 @@ int main(int argc, char* argv[])
    for (ir=0;ir<=Nr;ir++) {
       I_r[ir]=0;
       for (j=0;j<=Nph;j++) {
-         I_rph[indexr(ir,j)]=0;
+         I_rph[indexr(ir,j)] = 0;
       }
    }
    for (ir=0;ir<=Nr;ir++) {
-      for (ith=0;ith<=Nth;ith++) {
-         for (iph=0;iph<=Nph;iph++) {
-            corpow_ijk[indexijk(ir,ith,iph)]=0;
-         }
-      }
+       for (ith=0;ith<=Nth;ith++) {
+           for (iph=0;iph<=Nph;iph++) {
+               corpow_ijk[indexijk(ir,ith,iph)] = 0;
+           }
+       }
    }
-   
-   a2 = aa*aa;
-   kapp_es = 0.4;
-   eps_th = 1e-5;
-   th0 = 0.08061;
-   f_Fe = 0.5; //Fe Kalpha flourescent yield
-   T_e0 = 0.25;
-   T_e0 = T_cor/1000.; //corona temp in MeV
-   T_d0 = 1.0;
-   fcseed = 0.1; //fraction of coronal seeds launched
-   f_hard = 1.8;
+
+
+   a2      = aa*aa;       // Spin Squared
+   kapp_es = 0.4;         // Electron scattering average Opacity (X = 1 pure hydrogen).
+   eps_th  = 1e-5;        // something - theta
+   th0     = 0.08061;     // 4.62 deg?
+   f_Fe    = 0.5;         // Fe Kalpha flourescent yield
+   T_e0    = 0.25;        // 
+   T_e0    = T_cor/1000.; // Corona temp in MeV
+   T_d0    = 1.0;         // 
+   fcseed  = 0.1;         // Fraction of coronal seeds launched
+   f_hard  = 1.8;         // 
+   R_g     = 1.45e6 * (Mstar / 3.33);
+   pro     = 1.0;
+   Z1      = 1.0 + pow((1-(aa*aa)/(M*M)), 1./3.) * (pow((1+aa/M), 1./3.)+pow((1-aa/M), 1./3.));
+   Z2      = sqrt(3.*(aa*aa)/(M*M)+Z1*Z1);
+   Risco   = M*(3.+Z2-pro*sqrt((3.-Z1)*(3.+Z1+2.*Z2)));
+                       
    if (OPT_THIN == 1) f_hard = 1.0;
-   if (em_model == 1) spec_model = 1;  //1 for linear energy scale, 2 for log scale
-   if (em_model > 1) spec_model = 2;  //1 for linear energy scale, 2 for log scale
-   rr_model = 2;  //1 for linear spacing of rr, 2 for log scale
-   R_g = 1.45e6*(Mstar/3.33);
-   pro = 1.0;
-   Z1 = 1.+pow((1-(aa*aa)/(M*M)),1./3.)*
-   (pow((1+aa/M),1./3.)+pow((1-aa/M),1./3.));
-   Z2 = sqrt(3.*(aa*aa)/(M*M)+Z1*Z1);
-   Risco = M*(3.+Z2-pro*sqrt((3.-Z1)*(3.+Z1+2.*Z2)));
-   //  printf("a/M = %8.4e\n",aa);
+   if (em_model == 1) spec_model = 1;  // 1 for linear energy scale, 2 for log scale
+   if (em_model > 1) spec_model = 2;   // 1 for linear energy scale, 2 for log scale
+   rr_model = 2;  // (unused) 1 for linear spacing of rr, 2 for log scale
+      //  printf("a/M = %8.4e\n",aa);
    //  printf("Risco = %12.6e\n",Risco);
-   Eisco = (Risco*Risco-2*M*Risco+pro*aa*sqrt(M*Risco))/
-   (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
-   Lisco = pro*sqrt(M*Risco)*(Risco*Risco-pro*2*aa*sqrt(M*Risco)+a2)/
-   (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+   Eisco = (Risco*Risco-2*M*Risco+pro*aa*sqrt(M*Risco)) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+   Lisco = pro*sqrt(M*Risco)*(Risco*Risco-pro*2*aa*sqrt(M*Risco)+a2) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
    r_es = Risco*R_g;
    
    //linear scale
@@ -392,8 +402,6 @@ int main(int argc, char* argv[])
    z_hat[2]=1;
    get_harm3d_data(rr,tt,pp,rho_ijk,T_ijk,bb_ijk,tau_ijk,ut_ijk,ur_ijk,uz_ijk,up_ijk,
                    diskbody_ik,sigtau_ik,Tdisk_ik,emtop_ik,embot_ik,reftop_ik,refbot_ik);
-   printf("check\n");
-   getchar();
    /*
     T_e0 = 1e7;
     T_e = 1e7;
@@ -528,18 +536,12 @@ int main(int argc, char* argv[])
                for (j=0;j<=Ne;j++) flux+=Inur[indexre(ir,j)]*dnu0[j];
                //printf("%12.5e %12.5e\n",Inur[indexre(ir,50)],flux*PI);
                if (fmod(ir,10) < 0) {
-                  printf("e_tlf: %12.5e %12.5e %12.5e %12.5e\n",
-                         e_lf[0][0],e_lf[0][1],e_lf[0][2],e_lf[0][3]);
-                  printf("e_xlf: %12.5e %12.5e %12.5e %12.5e\n",
-                         e_lf[1][0],e_lf[1][1],e_lf[1][2],e_lf[1][3]);
-                  printf("e_ylf: %12.5e %12.5e %12.5e %12.5e\n",
-                         e_lf[2][0],e_lf[2][1],e_lf[2][2],e_lf[2][3]);
-                  printf("e_zlf: %12.5e %12.5e %12.5e %12.5e\n",
-                         e_lf[3][0],e_lf[3][1],e_lf[3][2],e_lf[3][3]);
-                  printf("dx_r : %12.5e\n", 0.5*(emtop_ik[indexr(ir+1,iph)]-
-                                                 emtop_ik[indexr(ir-1,iph)]));
-                  printf("dx_p : %12.5e\n", 0.5*(emtop_ik[indexr(ir,iph+1)]-
-                                                 emtop_ik[indexr(ir,iph-1)]));
+                  printf("e_tlf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[0][0],e_lf[0][1],e_lf[0][2],e_lf[0][3]);
+                  printf("e_xlf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[1][0],e_lf[1][1],e_lf[1][2],e_lf[1][3]);
+                  printf("e_ylf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[2][0],e_lf[2][1],e_lf[2][2],e_lf[2][3]);
+                  printf("e_zlf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[3][0],e_lf[3][1],e_lf[3][2],e_lf[3][3]);
+                  printf("dx_r : %12.5e\n", 0.5*(emtop_ik[indexr(ir+1,iph)] - emtop_ik[indexr(ir-1,iph)]));
+                  printf("dx_p : %12.5e\n", 0.5*(emtop_ik[indexr(ir,iph+1)] - emtop_ik[indexr(ir,iph-1)]));
                   
                }
                G_factr[ir] = G_fact;
@@ -577,14 +579,19 @@ int main(int argc, char* argv[])
                   iscat = 0;
                   just_scattered = 0;
                   
-                  //LAUNCH DISK PHOTON
+                  // LAUNCH DISK PHOTON
                   if ((ibottom == 0)||(ibottom == 1)) {
-                     lambda = (double)rand()/(RAND_MAX);
-                     cth = lambda; //only consider photons moving in +z direction
+                     lambda = (double)rand() / (RAND_MAX);  // Random Number between 0 and 1
+                     cth = lambda;                          // Only consider photons moving in +z direction 
+                                                            // cth = cos(theta) theta = 0 --> cth = 1 (+z direction)
+                     
+                     // Use this for isotropic emission
                      //if ((rr[ir]<Redge)&&(atm_model==1.5)) cth = 1.-2.*lambda;
-                     sth = sqrt(1.-cth*cth);
-                     lambda = (double)rand()/(RAND_MAX);
-                     phi = 2.*PI*lambda;
+                     
+                     sth = sqrt(1.-cth*cth); // sin(theta) = sqrt( 1 - cos^2(theta))
+
+                     lambda = (double)rand() / (RAND_MAX);  // Get New value random val 0-1
+                     phi = 2.*PI*lambda;                    // Get Azimuthal Angle
                      
                      r = y0[1];
                      t = y0[2];
@@ -685,13 +692,13 @@ int main(int argc, char* argv[])
                      lambda = (double)rand()/(RAND_MAX);
                      //upper corona
                      if (ibottom == 2) {
-                        dcth = (emtop_ik[indexr(ir,iph)]-th0)/((double)(N+1)*(N+1));
-                        y0[2] = th0+((double)it*(N+1)+(double)ip+1.)*dcth;
+                        dcth = (emtop_ik[indexr(ir,iph)] - th0)/((double)(N+1)*(N+1));
+                        y0[2] = th0 + ((double)it*(N+1)+(double)ip+1.)*dcth;
                      }
                      //lower corona
                      if (ibottom == 3) {
-                        dcth = (PI-th0-embot_ik[indexr(ir,iph)])/((double)(N+1)*(N+1));
-                        y0[2] = PI-th0-((double)it*(N+1)+(double)ip+1.)*dcth;
+                        dcth = (PI - th0 - embot_ik[indexr(ir,iph)])/((double)(N+1)*(N+1));
+                        y0[2] = PI - th0 - ((double)it*(N+1)+(double)ip+1.)*dcth;
                      }
                      r = y0[1];
                      t = y0[2];
@@ -913,33 +920,27 @@ int main(int argc, char* argv[])
                      //   A_fact,cth0,D_fact,G_fact,T_fact);
                   }
                   
-                  ph_v[0] = (e_lf[0][0]*(1.)+e_lf[1][0]*p_hat[0]+
-                             e_lf[2][0]*p_hat[1]+e_lf[3][0]*p_hat[2]);
-                  ph_v[1] = (e_lf[0][1]*(1.)+e_lf[1][1]*p_hat[0]+
-                             e_lf[2][1]*p_hat[1]+e_lf[3][1]*p_hat[2]);
-                  ph_v[2] = (e_lf[0][2]*(1.)+e_lf[1][2]*p_hat[0]+
-                             e_lf[2][2]*p_hat[1]+e_lf[3][2]*p_hat[2]);
-                  ph_v[3] = (e_lf[0][3]*(1.)+e_lf[1][3]*p_hat[0]+
-                             e_lf[2][3]*p_hat[1]+e_lf[3][3]*p_hat[2]);
-                  f0_[0] = (e_lf[0][0]*(0.)+e_lf[1][0]*f_hat[0]+
-                            e_lf[2][0]*f_hat[1]+e_lf[3][0]*f_hat[2]);
-                  f0_[1] = (e_lf[0][1]*(0.)+e_lf[1][1]*f_hat[0]+
-                            e_lf[2][1]*f_hat[1]+e_lf[3][1]*f_hat[2]);
-                  f0_[2] = (e_lf[0][2]*(0.)+e_lf[1][2]*f_hat[0]+
-                            e_lf[2][2]*f_hat[1]+e_lf[3][2]*f_hat[2]);
-                  f0_[3] = (e_lf[0][3]*(0.)+e_lf[1][3]*f_hat[0]+
-                            e_lf[2][3]*f_hat[1]+e_lf[3][3]*f_hat[2]);
+                  ph_v[0] = e_lf[0][0]*(1.)+e_lf[1][0]*p_hat[0] + e_lf[2][0]*p_hat[1]+e_lf[3][0]*p_hat[2];
+                  ph_v[1] = e_lf[0][1]*(1.)+e_lf[1][1]*p_hat[0] + e_lf[2][1]*p_hat[1]+e_lf[3][1]*p_hat[2];
+                  ph_v[2] = e_lf[0][2]*(1.)+e_lf[1][2]*p_hat[0] + e_lf[2][2]*p_hat[1]+e_lf[3][2]*p_hat[2];
+                  ph_v[3] = e_lf[0][3]*(1.)+e_lf[1][3]*p_hat[0] + e_lf[2][3]*p_hat[1]+e_lf[3][3]*p_hat[2];
+                  f0_[0]  = e_lf[0][0]*(0.)+e_lf[1][0]*f_hat[0] + e_lf[2][0]*f_hat[1]+e_lf[3][0]*f_hat[2];
+                  f0_[1]  = e_lf[0][1]*(0.)+e_lf[1][1]*f_hat[0] + e_lf[2][1]*f_hat[1]+e_lf[3][1]*f_hat[2];
+                  f0_[2]  = e_lf[0][2]*(0.)+e_lf[1][2]*f_hat[0] + e_lf[2][2]*f_hat[1]+e_lf[3][2]*f_hat[2];
+                  f0_[3]  = e_lf[0][3]*(0.)+e_lf[1][3]*f_hat[0] + e_lf[2][3]*f_hat[1]+e_lf[3][3]*f_hat[2];
                   //E0 = dot_g4(g_dn_ph,ph_v,ph_v);
                   //if (fabs(E0) > 1e-3)
                   //printf("%d %d %d %g %g\n",steps,iscat,dscat,dot_g4(g_dn_ph,ph_v,ph_v),yn[1]);
-                  kap10 = aa*cos(t)*((ph_v[0]*f0_[1]-ph_v[1]*f0_[0])
-                                     +aa*sin(t)*sin(t)*(ph_v[1]*f0_[3]-ph_v[3]*f0_[1]))
-                  +r*sin(t)*((r*r+aa*aa)*(ph_v[3]*f0_[2]-ph_v[2]*f0_[3])
-                             -aa*(ph_v[0]*f0_[2]-ph_v[2]*f0_[0]));
+                  kap10 = aa*cos(t)*((ph_v[0]*f0_[1]-ph_v[1]*f0_[0]) 
+                        + aa*sin(t)*sin(t)*(ph_v[1]*f0_[3]-ph_v[3]*f0_[1]))
+                        + r*sin(t)*((r*r+aa*aa)*(ph_v[3]*f0_[2]-ph_v[2]*f0_[3])
+                        - aa*(ph_v[0]*f0_[2]-ph_v[2]*f0_[0]));
+
                   kap20 = r*(ph_v[0]*f0_[1]-ph_v[1]*f0_[0]
-                             +aa*sin(t)*sin(t)*(ph_v[1]*f0_[3]-ph_v[3]*f0_[1]))-
-                  aa*sin(t)*cos(t)*((r*r+aa*aa)*(ph_v[3]*f0_[2]-ph_v[2]*f0_[3])
-                                    -aa*(ph_v[0]*f0_[2]-ph_v[2]*f0_[0]));
+                        + aa*sin(t)*sin(t)*(ph_v[1]*f0_[3]-ph_v[3]*f0_[1]))
+                        - aa*sin(t)*cos(t)*((r*r+aa*aa)*(ph_v[3]*f0_[2]-ph_v[2]*f0_[3])
+                        - aa*(ph_v[0]*f0_[2]-ph_v[2]*f0_[0]));
+
                   kap1i = kap10;
                   kap2i = kap20;
                   
@@ -1731,18 +1732,18 @@ int main(int argc, char* argv[])
                               dnu[iv] = dnu[iv]*rdsh;
                            }
                            
-                           bdata1[1]=kap1i;
-                           bdata1[2]=kap2i;
-                           bdata1[3]=0;
-                           bdata1[4]=0;
-                           adata1[1][1]=-aa*cth*k_[1]+r*sth*aa*k_[2];
-                           adata1[1][2]=aa*cth*k_[0]-aa*sth*sth*k_[3];
-                           adata1[1][3]=r*sth*((r2+a2)*k_[3]-aa*k_[0]);
-                           adata1[1][4]=a2*cth*sth*sth*k_[1]+r*sth*(-(r2+a2)*k_[2]);
-                           adata1[2][1]=r*(-k_[1])+a2*sth*cth*k_[2];
-                           adata1[2][2]=r*(k_[0]-aa*sth*sth*k_[3]);
-                           adata1[2][3]=aa*sth*cth*((r2+a2)*k_[3]-aa*k_[0]);
-                           adata1[2][4]=r*aa*sth*sth*k_[1]-aa*sth*cth*(-(r2+a2)*k_[2]);
+                           bdata1[1] = kap1i;
+                           bdata1[2] = kap2i;
+                           bdata1[3] = 0;
+                           bdata1[4] = 0;
+                           adata1[1][1] = -aa*cth*k_[1] + r*sth*aa*k_[2];
+                           adata1[1][2] = aa*cth*k_[0] - aa*sth*sth*k_[3];
+                           adata1[1][3] = r*sth*((r2+a2)*k_[3]-aa*k_[0]);
+                           adata1[1][4] = a2*cth*sth*sth*k_[1] + r*sth*(-(r2+a2)*k_[2]);
+                           adata1[2][1] = r*(-k_[1]) + a2*sth*cth*k_[2];
+                           adata1[2][2] = r*(k_[0] - aa*sth*sth*k_[3]);
+                           adata1[2][3] = aa*sth*cth*((r2+a2)*k_[3]-aa*k_[0]);
+                           adata1[2][4] = r*aa*sth*sth*k_[1] - aa*sth*cth*(-(r2+a2)*k_[2]);
                            for (j=0;j<=3;j++) {
                               adata1[3][j+1]=p_[j];
                               adata1[4][j+1]=po_[j];
@@ -1779,6 +1780,7 @@ int main(int argc, char* argv[])
                            E_i = ph_v_hat[0];
                            //PICK RANDOM 3-VELOCITY FOR ELECTRON IN CORONA FRAME
                            lambda = (double)rand()/(RAND_MAX);
+
                            //ELECTRON TEMP IN MeV
                            T_e = T_e/(11000.)/1.0e6;
                            //BULK COMPTONIZATION
@@ -1862,7 +1864,7 @@ int main(int argc, char* argv[])
                            +ph_v_hat[2]*ph_v_hat[2]+ph_v_hat[3]*ph_v_hat[3];
                            //E_f = n_p_hat[0]*n_p_hat[0]+n_p_hat[1]*n_p_hat[1]+n_p_hat[2]*n_p_hat[2];
                            //E_f = f_hat[0]*e_z_hat[0]+f_hat[1]*e_z_hat[1]+f_hat[2]*e_z_hat[2];
-                           if (fabs(E0) > 1e-2) printf("b %g %g %g\n",E0, E_f, E_i);
+                           // if (fabs(E0) > 1e-2) printf("b %g %g %g\n",E0, E_f, E_i);
                            cross(e_z_hat,n_p_hat,e_perp);
                            normalize(e_perp);
                            cross(e_perp,e_z_hat,e_parl);
@@ -1892,11 +1894,11 @@ int main(int argc, char* argv[])
                            E_f = ph_v_hat[0];
                            E0 = -ph_v_hat[0]*ph_v_hat[0]+ph_v_hat[1]*ph_v_hat[1]
                            +ph_v_hat[2]*ph_v_hat[2]+ph_v_hat[3]*ph_v_hat[3];
-                           if (fabs(E0) > 1e-4) {
-                              printf("neg energy %ld %ld %ld %ld %g %g %g %g %g %g\n",it,ip,ir,iph,
-                                     E0,dot_g4(g_up_ph,p_,p_),dot_g4(g_dn_ph,v_,v_),yn[1],yn[2],rdsh);
-                              //sleep(1);
-                           }
+                           // if (fabs(E0) > 1e-4) {
+                           //   printf("neg energy %ld %ld %ld %ld %g %g %g %g %g %g\n",it,ip,ir,iph,
+                           //       E0,dot_g4(g_up_ph,p_,p_),dot_g4(g_dn_ph,v_,v_),yn[1],yn[2],rdsh);
+                           //       sleep(1);
+                           //}
                            boost(beta,n_hat,ph_v_hat);
                            boost(beta,n_hat,f_v_hat);
                            rdsh = ph_v_hat[0]/E_f;

@@ -1,17 +1,18 @@
-# Compiler flags
 CFLAGS = -O3 -fPIE
 LDFLAGS = -lm
 
-# Source files
+DEBUG = 0
+
 SOURCES = pandurata.c accel.c calc_g.c cashkarp.c time_keeper.c vector_math.c \
           tensor_math.c calc_scat_angles.c calc_tetrad.c nt_spectrum.c \
           chandra.c get_harm3d_data.c lookup_data.c
-
-# Object files
 OBJECTS = $(SOURCES:.c=.o)
-
-# Output executable
 TARGET = pandurata
+
+# If DEBUG=1, enable debugging flags
+ifeq ($(DEBUG), 1)
+    CFLAGS = -g -O0
+endif
 
 # Compile object files
 %.o: %.c
@@ -27,4 +28,3 @@ clean:
 	@echo "Cleaned up object files and executable"
 
 .PHONY: clean
-
