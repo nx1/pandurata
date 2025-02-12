@@ -45,7 +45,7 @@
 #define Nth 63 //31 //159
 #define Nph 47 //31 //63
 #define Ni 80 // 200
-#define Nt 20
+#define Nt 20      // Number of temperature bins
 #define Nph_obs 0
 #define Nth_obs 40
 #define Ne_obs 10

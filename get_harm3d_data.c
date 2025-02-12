@@ -24,8 +24,8 @@ void get_harm3d_data(double rr[], double tt[], double pp[], double rho_ijk[],
   printf("check\n");
 
   strcpy(fname, "data/gr_0000_new.dat");
-  fname[8] = 48 + ik;
-  fname[9] = 48 + ih;
+  fname[8]  = 48 + ik;
+  fname[9]  = 48 + ih;
   fname[10] = 48 + id;
   fname[11] = 48 + iu;
   printf("%s\n", fname);
@@ -58,8 +58,8 @@ void get_harm3d_data(double rr[], double tt[], double pp[], double rho_ijk[],
   fclose(grid_file);
 
   strcpy(fname, "data/ph_0000_new.dat");
-  fname[8] = 48 + ik;
-  fname[9] = 48 + ih;
+  fname[8]  = 48 + ik;
+  fname[9]  = 48 + ih;
   fname[10] = 48 + id;
   fname[11] = 48 + iu;
   printf("%s\n", fname);
@@ -153,13 +153,13 @@ void get_harm3d_data(double rr[], double tt[], double pp[], double rho_ijk[],
   fclose(photo_file);
 
   rho_flt = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
-  T_flt = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
-  bb_flt = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
+  T_flt   = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
+  bb_flt  = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
+  ut_flt  = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
+  ur_flt  = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
+  uz_flt  = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
+  up_flt  = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
   tau_flt = (float *)malloc((Nr + 1) * (Nth + 2) * (Nph + 1) * sizeof(float));
-  ut_flt = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
-  ur_flt = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
-  uz_flt = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
-  up_flt = (float *)malloc((Nr + 1) * (Nth + 1) * (Nph + 1) * sizeof(float));
 
   strcpy(fname, "data/rh_0000.bin");
   fname[8] = 48 + ik;
@@ -245,13 +245,13 @@ void get_harm3d_data(double rr[], double tt[], double pp[], double rho_ijk[],
   for (i = 0; i <= Nr; i++) {
     for (j = 0; j <= Nth; j++) {
       for (k = 0; k <= Nph; k++) {
-        T_ijk[indexijk(i, j, k)] = fmin((double)T_flt[indexijk(i, j, k)], 1.e5 / kB_ev);
+        T_ijk[indexijk(i, j, k)]   = fmin((double)T_flt[indexijk(i, j, k)], 1.e5 / kB_ev);
         rho_ijk[indexijk(i, j, k)] = (double)rho_flt[indexijk(i, j, k)];
-        bb_ijk[indexijk(i, j, k)] = (double)bb_flt[indexijk(i, j, k)];
-        ut_ijk[indexijk(i, j, k)] = (double)ut_flt[indexijk(i, j, k)];
-        ur_ijk[indexijk(i, j, k)] = (double)ur_flt[indexijk(i, j, k)];
-        uz_ijk[indexijk(i, j, k)] = (double)uz_flt[indexijk(i, j, k)];
-        up_ijk[indexijk(i, j, k)] = (double)up_flt[indexijk(i, j, k)];
+        bb_ijk[indexijk(i, j, k)]  = (double)bb_flt[indexijk(i, j, k)];
+        ut_ijk[indexijk(i, j, k)]  = (double)ut_flt[indexijk(i, j, k)];
+        ur_ijk[indexijk(i, j, k)]  = (double)ur_flt[indexijk(i, j, k)];
+        uz_ijk[indexijk(i, j, k)]  = (double)uz_flt[indexijk(i, j, k)];
+        up_ijk[indexijk(i, j, k)]  = (double)up_flt[indexijk(i, j, k)];
       }
     }
   }

@@ -40,8 +40,9 @@ double lookup_Pnorm(double Pnorm[], double T_[], double T_e, int N_T)
    return PN_T;
 }
 
-//tabulate the normalization of cyclotron emission as a function of 
-//electron temperature T (measured in keV)
+// tabulate the normalization of cyclotron emission as a function of 
+// electron temperature T (measured in keV)
+// The cyclotron emission is supressed at low energies
 void calc_Pnorm_T(double Pnorm[], double T[], int N_T)
 {
    int i, i_t, Nx=1001;
@@ -49,10 +50,10 @@ void calc_Pnorm_T(double Pnorm[], double T[], int N_T)
    x_lo = 1e-3;
    x_hi = 1;
    dlogx = log10(x_hi/x_lo)/(Nx-1.);
-   for (i_t=0;i_t<N_T;i_t++) {
+   for (i_t=0; i_t<N_T; i_t++) {
       x0 = x_lo;
       Ptot = 0;
-      for (i=1;i<Nx;i++) {
+      for (i=1; i<Nx; i++) {
          x1 = x_lo*pow(10.,i*dlogx);
          dx = x1-x0;
          x = 0.5*(x1+x0);
@@ -307,6 +308,9 @@ int main(int argc, char* argv[])
    }
 
 
+   f_hard  = 1.8;         // Color correction? (applied to T_e0 & also used to calc I)
+   if (OPT_THIN == 1) f_hard = 1.0;    
+
    a2      = aa*aa;       // Spin Squared
    kapp_es = 0.4;         // Electron scattering average Opacity (X = 1 pure hydrogen).
    eps_th  = 1e-5;        // something - theta
@@ -316,24 +320,27 @@ int main(int argc, char* argv[])
    T_e0    = T_cor/1000.; // Corona temp in MeV
    T_d0    = 1.0;         // 
    fcseed  = 0.1;         // Fraction of coronal seeds launched
-   f_hard  = 1.8;         // 
-   R_g     = 1.45e6 * (Mstar / 3.33);
-   pro     = 1.0;
-   Z1      = 1.0 + pow((1-(aa*aa)/(M*M)), 1./3.) * (pow((1+aa/M), 1./3.)+pow((1-aa/M), 1./3.));
-   Z2      = sqrt(3.*(aa*aa)/(M*M)+Z1*Z1);
-   Risco   = M*(3.+Z2-pro*sqrt((3.-Z1)*(3.+Z1+2.*Z2)));
-                       
-   if (OPT_THIN == 1) f_hard = 1.0;
-   if (em_model == 1) spec_model = 1;  // 1 for linear energy scale, 2 for log scale
-   if (em_model > 1) spec_model = 2;   // 1 for linear energy scale, 2 for log scale
-   rr_model = 2;  // (unused) 1 for linear spacing of rr, 2 for log scale
-      //  printf("a/M = %8.4e\n",aa);
-   //  printf("Risco = %12.6e\n",Risco);
-   Eisco = (Risco*Risco-2*M*Risco+pro*aa*sqrt(M*Risco)) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
-   Lisco = pro*sqrt(M*Risco)*(Risco*Risco-pro*2*aa*sqrt(M*Risco)+a2) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
-   r_es = Risco*R_g;
+   R_g     = 1.45e6 * (Mstar / 3.33); // I am so confused
+   // R_g     = Gn * M / cc*cc // This would make more sense to me
+  
+   // ISCO Calculation https://en.wikipedia.org/wiki/Innermost_stable_circular_orbit#Rotating_black_holes
+   pro     = 1.0; // Prograde = 1 Retrograde = -1
+   Z1      = 1.0 + pow((1-a2/(M*M)), 1./3.) * (pow((1+aa/M), 1./3.)+pow((1-aa/M), 1./3.));
+   Z2      = sqrt(3.*a2/(M*M)+Z1*Z1);
+   Risco   = M*(3.+Z2-pro*sqrt((3.-Z1)*(3.+Z1+2.*Z2)));  // Units R_g (= 2.32)
    
-   //linear scale
+   // Specific Energy (energy per unit mass) (= 0.84)
+   Eisco = (Risco*Risco-2*M*Risco+pro*aa*sqrt(M*Risco)) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+   // Specific Angular Momentum (angular momentum per unit mass) (= 2.1)
+   Lisco = pro*sqrt(M*Risco)*(Risco*Risco-pro*2*aa*sqrt(M*Risco)+a2) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+   r_es = Risco*R_g;  //ISCO Radius in cm (_es is confusing this is unused anyway)
+
+
+   rr_model = 2;                       // (unused) 1 for linear spacing of rr, 2 for log scale
+   if (em_model == 1) spec_model = 1;  // 1 for linear energy scale, 2 for log scale
+   if (em_model >  1) spec_model = 2;  // 1 for linear energy scale, 2 for log scale
+      
+   // linear scale calculate energy bins and spacings
    if (spec_model == 1) {
       e_min = 0.0;
       e_max = 2.0;
@@ -352,54 +359,62 @@ int main(int argc, char* argv[])
       dnui0[0]=nui0[1]-nui0[0];
       dnui0[Ne_obs]=nui0[Ne_obs]-nui0[Ne_obs-1];
    }
-   //log scale
+   // log scale
    if (spec_model == 2) {
       e_min = 0.001;
       if (Mstar > 100) e_min = 0.001; //AGN temp scale
       e_max = 1000.0;
-      //e_min = 1e-7;                   //synchrotron seeds
+      //e_min = 1e-7; // synchrotron seeds
       //e_min = 1e-3;
-      e_max = 10000.0;                //hot corona scale
+      e_max = 10000.0; // hot corona scale
+
+      // Set up log energy grid and bin widths
       nu0[0]=e_min;
-      for (j=1;j<=Ne;j++) {
-         nu0[j]=e_min*pow(10.,((double)j)/Ne*log10(e_max/e_min));
-         T_tab[j]=nu0[j];
+      for (j=1; j<=Ne; j++) {
+         nu0[j] = e_min * pow(10.,((double)j) / Ne * log10(e_max/e_min));
+         T_tab[j] = nu0[j];
       }
-      for (j=1;j<Ne;j++) dnu0[j]=0.5*(nu0[j+1]-nu0[j-1]);
-      dnu0[0]=nu0[1]-nu0[0];
-      dnu0[Ne]=nu0[Ne]-nu0[Ne-1];
+
+      for (j=1; j<Ne; j++) dnu0[j] = 0.5 * (nu0[j+1] - nu0[j-1]);
+      dnu0[0] = nu0[1] - nu0[0];
+      dnu0[Ne] = nu0[Ne] - nu0[Ne-1];
       
-      nui0[0]=e_min;
-      for (j=1;j<=Ne_obs;j++) {
-         nui0[j]=e_min*pow(10.,((double)j)/Ne_obs*log10(e_max/e_min));
+      // Do the same again over Ne_obs bins 
+      nui0[0] = e_min;
+      for (j=1; j<=Ne_obs; j++) {
+         nui0[j] = e_min * pow(10.,((double)j) / Ne_obs * log10(e_max/e_min));
       }
-      for (j=1;j<Ne_obs;j++) dnui0[j]=0.5*(nui0[j+1]-nui0[j-1]);
-      dnui0[0]=nui0[1]-nui0[0];
-      dnui0[Ne_obs]=nui0[Ne_obs]-nui0[Ne_obs-1];
+
+      for (j=1; j<Ne_obs; j++) dnui0[j] = 0.5 * (nui0[j+1] - nui0[j-1]);
+      dnui0[0] = nui0[1] - nui0[0];
+      dnui0[Ne_obs] = nui0[Ne_obs] - nui0[Ne_obs-1];
    }
-   calc_Pnorm_T(Pnorm,T_tab,Ne+1);
-   Carter = 0;
+
+   calc_Pnorm_T(Pnorm,T_tab, Ne+1); // Calculate Synchrotron energy supression
+
+   Carter = 0; // Unused
    t = 0.0;
    dt = 1.0;
    V_tot = 0;
    srand(time(NULL));
    //srand(RUN_ID);
-   fov = 20;
+   fov = 20; // Image Field of View
    Rshell = 10000;
    Rout_flux = 1000.0;
    Redge = Risco;
    if ((em_model == 1.5)||(em_model == 3.5)) Redge = Rin;
-   Tmin = Rshell-2.*Rout;
-   Tmax = Rshell+100.;
-   dTbin = (Tmax-Tmin)/(Nt+1.);
+   Tmin = Rshell - 2.*Rout;       // = 8000
+   Tmax = Rshell + 100.;          // = 10100
+   dTbin = (Tmax-Tmin) / (Nt+1.); // = 100
    irstart = 0;
    view_jph = 0;
    //dph = 2.*PI/(N);
-   Nbins = (N+1)*(N+1)+1;
+   Nbins = (N+1)*(N+1)+1; // = 122
    E0 = 3.0;
-   z_hat[0]=0;
-   z_hat[1]=0;
-   z_hat[2]=1;
+   z_hat[0] = 0;
+   z_hat[1] = 0;
+   z_hat[2] = 1;
+
    get_harm3d_data(rr,tt,pp,rho_ijk,T_ijk,bb_ijk,tau_ijk,ut_ijk,ur_ijk,uz_ijk,up_ijk,
                    diskbody_ik,sigtau_ik,Tdisk_ik,emtop_ik,embot_ik,reftop_ik,refbot_ik);
    /*
@@ -526,8 +541,8 @@ int main(int argc, char* argv[])
                      Inur[indexre(ir,j)]=0;
                   }
                   if (T_e0 > 0) {
-                     x = 1.e3*nu0[j]/(kB_ev*T_e0);
-                     Inur[indexre(ir,j)]=pow(nu0[j],3.)/(exp(x)-1.)/pow(f_hard,4.);
+                     x = 1.e3 * nu0[j] / (kB_ev*T_e0);
+                     Inur[indexre(ir,j)] = pow(nu0[j],3.) / (exp(x)-1.) / pow(f_hard,4.);
                      //kap_ff = 1.5e25*rhoc_r[i]*pow(Ts_r[i],-3.5)*pow(x,-3.)*(1.-exp(-x));
                      //qnur[indexre(i,j)]=kap_es/(kap_es+kap_ff);
                   }
@@ -2500,8 +2515,7 @@ int main(int argc, char* argv[])
       fclose(outfile);
       
       for (jr=0;jr<=Nr;jr++) {
-         fprintf(outfile2,"%12.5e %12.5e %12.5e\n",
-                 rr[jr],L_factr[jr],G_factr[jr]);
+         fprintf(outfile2,"%12.5e %12.5e %12.5e\n", rr[jr],L_factr[jr],G_factr[jr]);
       }
       fprintf(outfile2,"\n");
       
@@ -2509,9 +2523,9 @@ int main(int argc, char* argv[])
          for (jth=0;jth<=Nth_obs;jth++) {
             for (je=0;je<=Ne;je++) {
                if (je == Ne) {
-                  fprintf(outfile2,"%12.5e\n",Qspecr[indexrth(jr,jth,je)]);
+                  fprintf(outfile2,"%12.5e\n", Qspecr[indexrth(jr,jth,je)]);
                } else {
-                  fprintf(outfile2,"%12.5e ",Qspecr[indexrth(jr,jth,je)]);
+                  fprintf(outfile2,"%12.5e ", Qspecr[indexrth(jr,jth,je)]);
                }
             }
          }
@@ -2523,9 +2537,9 @@ int main(int argc, char* argv[])
          for (jth=0;jth<=Nth_obs;jth++) {
             for (je=0;je<=Ne;je++) {
                if (je == Ne) {
-                  fprintf(outfile2,"%12.5e\n",Uspecr[indexrth(jr,jth,je)]);
+                  fprintf(outfile2,"%12.5e\n", Uspecr[indexrth(jr,jth,je)]);
                } else {
-                  fprintf(outfile2,"%12.5e ",Uspecr[indexrth(jr,jth,je)]);
+                  fprintf(outfile2,"%12.5e ", Uspecr[indexrth(jr,jth,je)]);
                }
             }
          }
@@ -2537,9 +2551,9 @@ int main(int argc, char* argv[])
          for (jth=0;jth<=Nth_obs;jth++) {
             for (je=0;je<=Ne;je++) {
                if (je == Ne) {
-                  fprintf(outfile2,"%12.5e\n",Rspecr[indexrth(jr,jth,je)]);
+                  fprintf(outfile2,"%12.5e\n", Rspecr[indexrth(jr,jth,je)]);
                } else {
-                  fprintf(outfile2,"%12.5e ",Rspecr[indexrth(jr,jth,je)]);
+                  fprintf(outfile2,"%12.5e ", Rspecr[indexrth(jr,jth,je)]);
                }
             }
          }

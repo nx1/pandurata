@@ -1,7 +1,7 @@
 CFLAGS = -O3 -fPIE
 LDFLAGS = -lm
 
-DEBUG = 0
+DEBUG = 1
 
 SOURCES = pandurata.c accel.c calc_g.c cashkarp.c time_keeper.c vector_math.c \
           tensor_math.c calc_scat_angles.c calc_tetrad.c nt_spectrum.c \
