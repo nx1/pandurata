@@ -287,10 +287,10 @@ int main(int argc, char* argv[])
    }
    for (ir=0;ir<=Nr;ir++) {
       for (je=0;je<=Ne;je++) {
-         Rspec[indexre(ir,je)]=0;
-         Cspecr[indexre(ir,je)]=0;
-         Inur[indexre(ir,je)]=0;
-         qnur[indexre(ir,je)]=0;
+         Rspec[indexre(ir,je)]  = 0;
+         Cspecr[indexre(ir,je)] = 0;
+         Inur[indexre(ir,je)]   = 0;
+         qnur[indexre(ir,je)]   = 0;
       }
    }
    for (ir=0;ir<=Nr;ir++) {
@@ -330,9 +330,13 @@ int main(int argc, char* argv[])
    Risco   = M*(3.+Z2-pro*sqrt((3.-Z1)*(3.+Z1+2.*Z2)));  // Units R_g (= 2.32)
    
    // Specific Energy (energy per unit mass) (= 0.84)
-   Eisco = (Risco*Risco-2*M*Risco+pro*aa*sqrt(M*Risco)) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+   Eisco = (Risco*Risco-2*M*Risco+pro*aa*sqrt(M*Risco))
+         / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+
    // Specific Angular Momentum (angular momentum per unit mass) (= 2.1)
-   Lisco = pro*sqrt(M*Risco)*(Risco*Risco-pro*2*aa*sqrt(M*Risco)+a2) / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+   Lisco = pro*sqrt(M*Risco)*(Risco*Risco-pro*2*aa*sqrt(M*Risco)+a2)
+         / (Risco*sqrt(Risco*Risco-3*M*Risco+pro*2*aa*sqrt(M*Risco)));
+
    r_es = Risco*R_g;  //ISCO Radius in cm (_es is confusing this is unused anyway)
 
 
@@ -437,15 +441,15 @@ int main(int argc, char* argv[])
     */
    nt_spectrum(Risco,rr,drr,nu0,Inur_NT,ntT,qnur);
    
-   //set the radial values of the boundaries of the cells
-   rrb[0]=Rin;
-   rrb[Nr+1]=Rout;
-   eta = log(Rin/Rhor);
+   // set the radial values of the boundaries of the cells
+   rrb[0]    = Rin;
+   rrb[Nr+1] = Rout;
+   eta = log(Rin / Rhor);
    irstart = 0;
-   for (ir=0;ir<=Nr;ir++) {
+   for (ir=0; ir<=Nr; ir++) {
       eta = eta + log(Rout/Rin)/(Nr+1);
-      rrb[ir+1]=exp(eta);
-      drr[ir]=rrb[ir+1]-rrb[ir];
+      rrb[ir+1] = exp(eta);
+      drr[ir] = rrb[ir+1] - rrb[ir];
       if (rr[ir] < Rhor) irstart++;
    }
    dph = (pp[Nph]-pp[0])/Nph;
@@ -459,11 +463,12 @@ int main(int argc, char* argv[])
    
    //irstart = 10;
    //irstop = Nr;
+   // Find maximum radial index for flux
    irstop = irstart;
-   for (ir=irstop;ir<=Nr;ir++) {
+   for (ir=irstop; ir<=Nr; ir++) {
       if (rr[ir] < Rout_flux) irstop++;
    }
-   irstop=irstop-1;
+   irstop = irstop - 1;
    printf("%ld %g\n", irstop, rr[irstop]);
    //irstart = 100;
    //irstop = 100;
@@ -473,16 +478,18 @@ int main(int argc, char* argv[])
    iphstep = 1;
    
    flux2 = 0;
+
+   // Loop over each side of the disc, all radii and all, phi
    //for (ibottom=0;ibottom<=1;ibottom++) {
-   for (ibottom=0;ibottom<=TWO_SIDED;ibottom++) {
-      for (ir=irstart;ir<=irstop;ir+=irstep) {
-         for (iph=iphstart;iph<=iphstop;iph+=iphstep) {
+   for (ibottom=0; ibottom<=TWO_SIDED; ibottom++) {
+      for (ir=irstart; ir<=irstop; ir+=irstep) {
+         for (iph=iphstart; iph<=iphstop; iph+=iphstep) {
             srand(ibottom*(Nr+1)*(Nph+1)+ir*(Nph+1)+iph+RUN_ID*0);
-            y0[0]=0;
-            y0[1]=rr[ir];
-            if (ibottom == 0) y0[2]=emtop_ik[indexr(ir,iph)]-eps_th;
-            if (ibottom == 1) y0[2]=embot_ik[indexr(ir,iph)]+eps_th;
-            y0[3]=pp[iph];
+            y0[0] = 0;
+            y0[1] = rr[ir];
+            if (ibottom == 0) y0[2] = emtop_ik[indexr(ir,iph)] - eps_th;
+            if (ibottom == 1) y0[2] = embot_ik[indexr(ir,iph)] + eps_th;
+            y0[3] = pp[iph];
             //lambda = (double)rand()/(RAND_MAX);
             //y0[3]=y0[3]+((int)(lambda*4.))*PI/2.;
             r = y0[1];
@@ -495,9 +502,11 @@ int main(int argc, char* argv[])
             alpha = sqrt(Sig*Delta/(Sig*Delta+2*M*r*(a2+r2)));
             omg = 2.*M*r*aa/(Sig*Delta+2.*M*r*(a2+r2));
             omgb = sqrt((Sig*Delta+2.*M*r*(a2+r2))/Sig*sin(t)*sin(t));
-            
+           
+            // Calculate metric tensor g_{\mu \nu} and g^{\mu \nu}
             for (j=0;j<=3;j++) part_x0[j]=y0[j];
-            calc_g(g_dn,g_up,part_x0);
+            calc_g(g_dn, g_up, part_x0); 
+
             if (ibottom == 0) {
                G_fact = Gtop_ik[indexr(ir,iph)];
                for (i=0;i<=3;i++) {
@@ -531,6 +540,12 @@ int main(int argc, char* argv[])
             if (ibottom <= 1) {
                T_e0 = Tdisk_ik[indexr(ir,iph)];
                //T_e0 = ntT[ir];
+               printf("ir: %ld  iph: %ld  rr[ir]: %10.4e  y0[2]: %10.4e  y0[3]: %10.4e  "
+                       "part_v[0]: %10.4e  part_v[1]: %10.4e  part_v[2]: %10.4e  "
+                       "part_v[3]: %10.4e  T_e0: %10.4e  diskbody_ik: %d\n",
+                        ir, iph, rr[ir], y0[2], y0[3], part_v[0], part_v[1], 
+                        part_v[2], part_v[3], T_e0, diskbody_ik[indexr(ir, iph)]);
+
                //printf("%d %d %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %d\n",
                //     ir,iph,rr[ir],y0[2],y0[3],part_v[0],part_v[1],
                //     part_v[2],part_v[3],T_e0,diskbody_ik[indexr(ir,iph)]);
@@ -664,17 +679,17 @@ int main(int argc, char* argv[])
                      //LINE EMISSION
                      if (em_model == 1) {
                         E_i = 1.0;
-                        for (iv=0;iv<=Ne;iv++) {
-                           nu[iv]=nu0[iv];
-                           dnu[iv]=dnu0[iv];
-                           Bnu_[iv]=0;
+                        for (iv=0; iv<=Ne; iv++) {
+                           nu[iv] = nu0[iv];
+                           dnu[iv] = dnu0[iv];
+                           Bnu_[iv] = 0;
                         }
                         //uniform emission
                         //B_fact = 1.0;
                         //1/r^2 emission
                         B_fact = 1.0/(rr[ir]*rr[ir]);
-                        iv=(int)floor((E_i-e_min)/(e_max-e_min)*Ne);
-                        Bnu_[iv]=B_fact;
+                        iv = (int)floor((E_i-e_min)/(e_max-e_min)*Ne);
+                        Bnu_[iv] = B_fact;
                      }
                      
                      //THERMAL EMISSION
@@ -816,9 +831,7 @@ int main(int argc, char* argv[])
                               for (j=0;j<=1;j++) {
                                  for (k=0;k<=1;k++) {
                                     wght = weights[i+6]*weights[j+8]*weights[k+10];
-                                    corpow_ijk[indexijk((int)weights[i],(int)weights[j+2],
-                                                        (int)weights[k+4])]
-                                    += wght*Bnu_[iv]*dnu0[iv]*A_fact;
+                                    corpow_ijk[indexijk((int)weights[i],(int)weights[j+2], (int)weights[k+4])] += wght*Bnu_[iv]*dnu0[iv]*A_fact;
                                  }
                               }
                            }
@@ -868,9 +881,7 @@ int main(int argc, char* argv[])
                               for (j=0;j<=1;j++) {
                                  for (k=0;k<=1;k++) {
                                     wght = weights[i+6]*weights[j+8]*weights[k+10];
-                                    corpow_ijk[indexijk((int)weights[i],(int)weights[j+2],
-                                                        (int)weights[k+4])]
-                                    += wght*Bnu_[iv]*dnu0[iv]*A_fact;
+                                    corpow_ijk[indexijk((int)weights[i], (int)weights[j+2], (int)weights[k+4])] += wght*Bnu_[iv]*dnu0[iv]*A_fact;
                                  }
                               }
                            }
@@ -1091,9 +1102,13 @@ int main(int argc, char* argv[])
                            lookup_data(part_x,rr,tt,pp,g_dn_ph,
                                        rho_ijk,T_ijk,bb_ijk,ut_ijk,ur_ijk,uz_ijk,up_ijk,
                                        weights,&rho,&T_e,&Bmag,v_);
-                           E0 = g_dn_ph[0][0]*v_[0]*v_[0]+2.*g_dn_ph[0][3]*v_[0]*v_[3]
-                           +g_dn_ph[1][1]*v_[1]*v_[1]+g_dn_ph[2][2]*v_[2]*v_[2]
-                           +g_dn_ph[3][3]*v_[3]*v_[3];
+
+                           E0 = g_dn_ph[0][0]    * v_[0] * v_[0]
+                              + 2.*g_dn_ph[0][3] * v_[0] * v_[3]
+                              + g_dn_ph[1][1]    * v_[1] * v_[1]
+                              + g_dn_ph[2][2]    * v_[2] * v_[2]
+                              + g_dn_ph[3][3]    * v_[3] * v_[3];
+
                            if (E0 > -0.99) printf("vdisk %ld %g %g %g\n",steps,E0,r,yn[2]);
                            
                            
@@ -1137,17 +1152,15 @@ int main(int argc, char* argv[])
                            
                            for (iv=0;iv<Ne;iv++) {
                               I_r[ir_new] += Bnu_[iv]*dnu[iv]*A_fact/A_fact2;
-                              I_rph[indexr(ir_new,jph_new)] +=
-                              Bnu_[iv]*dnu[iv]*A_fact/A_fact2;
+                              I_rph[indexr(ir_new,jph_new)] += Bnu_[iv]*dnu[iv]*A_fact/A_fact2;
                               //linear energy scale
                               if (spec_model == 1)
-                                 je=(int)floor((nu[iv]-e_min)/(e_max-e_min)*Ne);
+                                 je = (int)floor((nu[iv]-e_min)/(e_max-e_min)*Ne);
                               //log energy scale
                               if (spec_model == 2)
-                                 je=(int)floor((Ne)*log10(nu[iv]/e_min)/log10(e_max/e_min));
+                                 je = (int)floor((Ne)*log10(nu[iv]/e_min)/log10(e_max/e_min));
                               if ((je >= 0)&(je <= Ne)) {
-                                 Rspec[indexre(ir_new,je)] +=
-                                 Bnu_[iv]*dnu[iv]*A_fact/A_fact2/dnu0[je];
+                                 Rspec[indexre(ir_new,je)] += Bnu_[iv]*dnu[iv]*A_fact/A_fact2/dnu0[je];
                               }
                               //if ((it == 10)&&(ip == 10))
                               //printf("%d %d %g %g %g %g\n",ir_new,je,yn[1],nu0[iv],Bnu_[iv],
@@ -1165,14 +1178,14 @@ int main(int argc, char* argv[])
                                  adata[i*4+j]=0;
                               }
                            }
-                           adata[0*4+0]=-aa*cth*k_[1]+r*sth*aa*k_[2];
-                           adata[0*4+1]=aa*cth*k_[0]-aa*sth*sth*k_[3];
-                           adata[0*4+2]=r*sth*((r2+a2)*k_[3]-aa*k_[0]);
-                           adata[0*4+3]=a2*cth*sth*sth*k_[1]+r*sth*(-(r2+a2)*k_[2]);
-                           adata[1*4+0]=r*(-k_[1])+a2*sth*cth*k_[2];
-                           adata[1*4+1]=r*(k_[0]-aa*sth*sth*k_[3]);
-                           adata[1*4+2]=aa*sth*cth*((r2+a2)*k_[3]-aa*k_[0]);
-                           adata[1*4+3]=r*aa*sth*sth*k_[1]-aa*sth*cth*(-(r2+a2)*k_[2]);
+                           adata[0*4+0] = -aa*cth*k_[1]+r*sth*aa*k_[2];
+                           adata[0*4+1] = aa*cth*k_[0]-aa*sth*sth*k_[3];
+                           adata[0*4+2] = r*sth*((r2+a2)*k_[3]-aa*k_[0]);
+                           adata[0*4+3] = a2*cth*sth*sth*k_[1]+r*sth*(-(r2+a2)*k_[2]);
+                           adata[1*4+0] = r*(-k_[1])+a2*sth*cth*k_[2];
+                           adata[1*4+1] = r*(k_[0]-aa*sth*sth*k_[3]);
+                           adata[1*4+2] = aa*sth*cth*((r2+a2)*k_[3]-aa*k_[0]);
+                           adata[1*4+3] = r*aa*sth*sth*k_[1]-aa*sth*cth*(-(r2+a2)*k_[2]);
                            for (j=0;j<=3;j++) {
                               adata[2*4+j]=p_[j];
                               adata[3*4+j]=po_[j];
@@ -1204,14 +1217,14 @@ int main(int argc, char* argv[])
                            E_i = ph_v_hat[0];
                            E_i = -yn[4];
                            for (j=1;j<=3;j++) {
-                              f_v_hat[j]=f_v_hat[j]-f_v_hat[0]*ph_v_hat[j]/ph_v_hat[0];
-                              f_hat[j-1]=f_v_hat[j];
+                              f_v_hat[j] = f_v_hat[j]-f_v_hat[0]*ph_v_hat[j]/ph_v_hat[0];
+                              f_hat[j-1] = f_v_hat[j];
                            }
                            f_v_hat[0]=0;
                            normalize(f_hat);
                            
-                           //CONVERT PH_V_HAT AND F_V_HAT FROM FLUID FRAME TO SURF. TETRAD
-                           //BY JUMPING TO DISK SURFACE AND GOING BACK TO COORD FRAME
+                           // CONVERT PH_V_HAT AND F_V_HAT FROM FLUID FRAME TO SURF. TETRAD
+                           // BY JUMPING TO DISK SURFACE AND GOING BACK TO COORD FRAME
                            
                            if (isbottom == 0) {
                               for (i=0;i<=3;i++) {
@@ -1565,18 +1578,23 @@ int main(int argc, char* argv[])
                         lookup_data(part_x,rr,tt,pp,g_dn_ph,
                                     rho_ijk,T_ijk,bb_ijk,ut_ijk,ur_ijk,uz_ijk,up_ijk,
                                     weights,&rho,&T_e,&Bmag,v_);
-                        E0 = g_dn_ph[0][0]*v_[0]*v_[0]+2.*g_dn_ph[0][3]*v_[0]*v_[3]
-                        +g_dn_ph[1][1]*v_[1]*v_[1]+g_dn_ph[2][2]*v_[2]*v_[2]
-                        +g_dn_ph[3][3]*v_[3]*v_[3];
+
+                        E0 = g_dn_ph[0][0] * v_[0]*v_[0]
+                        + 2.*g_dn_ph[0][3] * v_[0]*v_[3]
+                           + g_dn_ph[1][1] * v_[1]*v_[1]
+                           + g_dn_ph[2][2] * v_[2]*v_[2]
+                           + g_dn_ph[3][3] * v_[3]*v_[3];
                         
                         rho_bar = rho;
                         dtau_es = kapp_es*rho*dtau*R_g;
                         tau_tot=tau_tot+dtau_es;
                         l_tot = l_tot+dtau*R_g;
                         lambda = (double)rand()/(RAND_MAX);
-                        if (E0 > -0.99) printf("vcor %ld %ld %g %g %g %g %g\n",
-                                               steps,iscat,dtau,rho,r,yn[2],dtau_es);
-                        
+                        if (E0 > -0.99) {
+                           printf("vcor: steps=%ld iscat=%ld dtau=%g rho=%g r=%g yn[2]=%g dtau_es=%g\n",
+                                  steps, iscat, dtau, rho, r, yn[2], dtau_es);
+                        }
+
                         //cyclotron self-absorption
                         if (ibottom >= 20) {
                            //rdsh is redshift of photon packet in corona rest frame,
@@ -1764,21 +1782,24 @@ int main(int argc, char* argv[])
                               adata1[4][j+1]=po_[j];
                            }
                            
-                           ludcmp_js(adata1,4,indx,&dd);
-                           lubksb_js(adata1,4,indx,bdata1);
+                           ludcmp_js(adata1, 4, indx, &dd);
+                           lubksb_js(adata1, 4, indx, bdata1);
                            for (j=0;j<=3;j++) f_[j]=bdata1[j+1];
                            
                            //transform into local gas frame
                            //calc_e(e_lfs,w_lfs,g_up_ph,g_dn_ph,po_,v_);
-                           calc_e2(e_lfs,w_lfs,g_up_ph,g_dn_ph,po_,v_);
+                           calc_e2(e_lfs, w_lfs, g_up_ph, g_dn_ph,po_,v_);
                            for (i=0;i<=3;i++) {
                               for (j=0;j<=3;j++) {
                                  adata1[i+1][j+1]=e_lfs[j][i];
                               }
                            }
-                           E0 = g_dn_ph[0][0]*k_[0]*k_[0]+2.*g_dn_ph[0][3]*k_[0]*k_[3]
-                           +g_dn_ph[1][1]*k_[1]*k_[1]+g_dn_ph[2][2]*k_[2]*k_[2]
-                           +g_dn_ph[3][3]*k_[3]*k_[3];
+                           E0 = g_dn_ph[0][0] * k_[0]*k_[0]
+                           + 2.*g_dn_ph[0][3] * k_[0]*k_[3]
+                              + g_dn_ph[1][1] * k_[1]*k_[1]
+                              + g_dn_ph[2][2] * k_[2]*k_[2]
+                              + g_dn_ph[3][3] * k_[3]*k_[3];
+
                            //printf("a %d %g\n",steps,E0);
                            ludcmp_js(adata1,4,indx,&dd);
                            for (j=0;j<=3;j++) bdata1[j+1]=k_[j];
@@ -1787,8 +1808,11 @@ int main(int argc, char* argv[])
                            for (j=0;j<=3;j++) bdata1[j+1]=f_[j];
                            lubksb_js(adata1,4,indx,bdata1);
                            for (j=0;j<=3;j++) f_v_hat[j]=bdata1[j+1];
-                           E0 = -ph_v_hat[0]*ph_v_hat[0]+ph_v_hat[1]*ph_v_hat[1]
-                           +ph_v_hat[2]*ph_v_hat[2]+ph_v_hat[3]*ph_v_hat[3];
+
+                           E0 = - ph_v_hat[0]*ph_v_hat[0]
+                                + ph_v_hat[1]*ph_v_hat[1]
+                                + ph_v_hat[2]*ph_v_hat[2]
+                                + ph_v_hat[3]*ph_v_hat[3];
                            //printf("ap %g\n",E0);
                            
                            //printf("pre-scatter p0  %12.5g\n",ph_v_hat[0]);
@@ -1875,11 +1899,17 @@ int main(int argc, char* argv[])
                               n_p_hat[j] = cth*e_z_hat[j]+sth*e_x_hat[j];
                               ph_v_hat[j+1]=n_p_hat[j]*ph_v_hat[0];
                            }
-                           E0 = -ph_v_hat[0]*ph_v_hat[0]+ph_v_hat[1]*ph_v_hat[1]
-                           +ph_v_hat[2]*ph_v_hat[2]+ph_v_hat[3]*ph_v_hat[3];
+
+                           E0 = - ph_v_hat[0]*ph_v_hat[0]
+                                + ph_v_hat[1]*ph_v_hat[1]
+                                + ph_v_hat[2]*ph_v_hat[2]
+                                + ph_v_hat[3]*ph_v_hat[3];
+
                            //E_f = n_p_hat[0]*n_p_hat[0]+n_p_hat[1]*n_p_hat[1]+n_p_hat[2]*n_p_hat[2];
                            //E_f = f_hat[0]*e_z_hat[0]+f_hat[1]*e_z_hat[1]+f_hat[2]*e_z_hat[2];
-                           // if (fabs(E0) > 1e-2) printf("b %g %g %g\n",E0, E_f, E_i);
+                           if (fabs(E0) > 1e-2) {
+                               printf("b: E0 = %g  E_f = %g  E_i = %g\n", E0, E_f, E_i);
+                           }
                            cross(e_z_hat,n_p_hat,e_perp);
                            normalize(e_perp);
                            cross(e_perp,e_z_hat,e_parl);
@@ -1907,8 +1937,11 @@ int main(int argc, char* argv[])
                            beta = -beta;
                            //printf("post-scatter p0  %12.5g\n",ph_v_hat[0]);
                            E_f = ph_v_hat[0];
-                           E0 = -ph_v_hat[0]*ph_v_hat[0]+ph_v_hat[1]*ph_v_hat[1]
-                           +ph_v_hat[2]*ph_v_hat[2]+ph_v_hat[3]*ph_v_hat[3];
+
+                           E0 = - ph_v_hat[0]*ph_v_hat[0]
+                                + ph_v_hat[1]*ph_v_hat[1]
+                                + ph_v_hat[2]*ph_v_hat[2]
+                                + ph_v_hat[3]*ph_v_hat[3];
                            // if (fabs(E0) > 1e-4) {
                            //   printf("neg energy %ld %ld %ld %ld %g %g %g %g %g %g\n",it,ip,ir,iph,
                            //       E0,dot_g4(g_up_ph,p_,p_),dot_g4(g_dn_ph,v_,v_),yn[1],yn[2],rdsh);
@@ -1926,6 +1959,7 @@ int main(int argc, char* argv[])
                               +ph_v_hat[2]*ph_v_hat[2]+ph_v_hat[3]*ph_v_hat[3];
                               //printf("%g %g\n",E0,E_f);
                            }
+
                            for (j=0;j<=3;j++) ph_v_hat[j]=ph_v_hat[j]/rdsh;
                            for (iv=0;iv<=Ne;iv++) {
                               nu[iv] = nu[iv]*rdsh;
@@ -2064,19 +2098,23 @@ int main(int argc, char* argv[])
                         if (jt > Nt) jt=Nt;
                         Iobs[indexph(jth,jph,jt)]=0;
                         if (imageprint == 1) {
-                           e_x[0]=-sin(yn[3]);
-                           e_x[1]=cos(yn[3]);
-                           e_x[2]=0;
-                           e_y[0]=-cos(yn[2])*cos(yn[3]);
-                           e_y[1]=-cos(yn[2])*sin(yn[3]);
-                           e_y[2]=sin(yn[2]);
-                           x_[0]=yn[1];
-                           x_[1]=yn[2];
-                           x_[2]=yn[3];
-                           p_hat[0]=yn[5];
-                           p_hat[1]=yn[6]/(yn[1]*yn[1]);
-                           p_hat[2]=yn[7]/(yn[1]*yn[1]*(sin(yn[2])*sin(yn[2])+1e-5));
-                           spherv_to_cartv(x_,p_hat,r_hat);
+                           e_x[0] = -sin(yn[3]);
+                           e_x[1] = cos(yn[3]);
+                           e_x[2] = 0;
+                           e_y[0] = -cos(yn[2])*cos(yn[3]);
+                           e_y[1] = -cos(yn[2])*sin(yn[3]);
+                           e_y[2] = sin(yn[2]);
+
+                           x_[0] = yn[1];
+                           x_[1] = yn[2];
+                           x_[2] = yn[3];
+
+                           p_hat[0] = yn[5];
+                           p_hat[1] = yn[6]/(yn[1]*yn[1]);
+                           p_hat[2] = yn[7]/(yn[1]*yn[1]*(sin(yn[2])*sin(yn[2])+1e-5));
+
+                           spherv_to_cartv(x_, p_hat, r_hat);
+
                            normalize(r_hat);
                            ix = (int)((dot(r_hat,e_x)/(fov/Rshell)+1)*Ni/2.);
                            iy = (int)((dot(r_hat,e_y)/(fov/Rshell)+1)*Ni/2.);
