@@ -1217,7 +1217,7 @@ int main(int argc, char* argv[])
                            E_i = ph_v_hat[0];
                            E_i = -yn[4];
                            for (j=1;j<=3;j++) {
-                              f_v_hat[j] = f_v_hat[j]-f_v_hat[0]*ph_v_hat[j]/ph_v_hat[0];
+                              f_v_hat[j] = f_v_hat[j] - f_v_hat[0]*ph_v_hat[j]/ph_v_hat[0];
                               f_hat[j-1] = f_v_hat[j];
                            }
                            f_v_hat[0]=0;
@@ -1979,36 +1979,38 @@ int main(int argc, char* argv[])
                               ph_v_p[i] = 0;
                               f_[i] = 0;
                               for (j=0;j<=3;j++) {
-                                 ph_v_p[i]+=e_lfs[j][i]*ph_v_hat[j];
-                                 f_[i]+=e_lfs[j][i]*f_v_hat[j];
+                                 ph_v_p[i] += e_lfs[j][i]*ph_v_hat[j];
+                                 f_[i]     += e_lfs[j][i]*f_v_hat[j];
                               }
                            }
                            deg = degp;
                            //weight photon by angle-dependent differential cross-section
                            //A_fact = A_fact*I_p;
                            kap1i = aa*cos(t)*((ph_v_p[0]*f_[1]-ph_v_p[1]*f_[0])
-                                              +aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))
-                           +r*sin(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
-                                      -aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
+                                 + aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))
+                                 + r*sin(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
+                                 - aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
+
                            kap2i = r*(ph_v_p[0]*f_[1]-ph_v_p[1]*f_[0]
-                                      +aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))-
-                           aa*sin(t)*cos(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
-                                             -aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
+                                 + aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))
+                                 - aa*sin(t)*cos(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
+                                 - aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
                            
-                           yn[4] = g_dn_ph[0][0]*ph_v_p[0]+g_dn_ph[0][3]*ph_v_p[3];
+                           yn[4] = g_dn_ph[0][0]*ph_v_p[0] + g_dn_ph[0][3]*ph_v_p[3];
                            yn[5] = g_dn_ph[1][1]*ph_v_p[1];
                            yn[6] = g_dn_ph[2][2]*ph_v_p[2];
-                           yn[7] = g_dn_ph[0][3]*ph_v_p[0]+g_dn_ph[3][3]*ph_v_p[3];
-                           pdv_em = (ph_v_p[0]*po_[0]+ph_v_p[1]*po_[1]+
-                                     ph_v_p[2]*po_[2]+ph_v_p[3]*po_[3]);
+                           yn[7] = g_dn_ph[0][3]*ph_v_p[0] + g_dn_ph[3][3]*ph_v_p[3];
+
+                           pdv_em = ph_v_p[0]*po_[0]+ph_v_p[1]*po_[1]
+                                  + ph_v_p[2]*po_[2]+ph_v_p[3]*po_[3];
+
                            pow_f = 0;
                            for (iv=0;iv<=Ne;iv++) pow_f+=Bnu_[iv]*dnu[iv];
                            for (i=0;i<=1;i++) {
                               for (j=0;j<=1;j++) {
                                  for (k=0;k<=1;k++) {
                                     wght = weights[i+6]*weights[j+8]*weights[k+10];
-                                    corpow_ijk[indexijk((int)weights[i],(int)weights[j+2],
-                                                        (int)weights[k+4])]
+                                    corpow_ijk[indexijk((int)weights[i], (int)weights[j+2], (int)weights[k+4])]
                                     += wght*(pow_f-pow_i)*A_fact;
                                  }
                               }
