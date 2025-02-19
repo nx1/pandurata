@@ -84,46 +84,68 @@ void m_mult3(double A[3][3], double B[3][3], double C[3][3])
 
 int main(int argc, char* argv[])
 {
-   double t,r,dth,dph,f,dt,cth,sth,sth2,cth2,phi,ph0,mu,mu0,err,x,
-   I_ll,I_rr,U_,f_new,f_old,dcth,th0,wc,nuc,Bmag,gam2,P0,dl,
-   y[8],y1[8],y2[8],yn[8],del[8],y_ck[8],del_ck[8],e_x[3],e_y[3],
-   x_[3],p_hat[3],r_hat[3],n_hat[3],f_hat[3],fp_hat[3],z_hat[3],
-   part_x0[4],part_x[4],part_p[4],part_v[4],part_v_hat[4],f0_[4],f_i[4],f_[4],
-   ph_p[4],ph_v[4],ph_v_hat[4],ph_v_p[4],v_[4],p_[4],po_[4],k_[4],
-   f_v_hat[4],dx_r[4],dx_th[4],dx_p[4],
-   g_up[4][4],g_dn[4][4],
-   g_up_ph[4][4],g_dn_ph[4][4],e_lf[4][4],w_lf[4][4],e_lfs[4][4],w_lfs[4][4],
-   e_lf2[4][4],w_lf2[4][4],
-   e_perp[3],e_parl[3],e_perp_f[3],e_parl_f[3],e_x_hat[3],e_y_hat[3],
-   e_z_hat[3],n_p_hat[3],
-   nu0[Ne+1],nu[Ne+1],dnu0[Ne+1],dnu[Ne+1],rr[Nr+1],drr[Nr+1],rrb[Nr+2],
-   ntT[Nr+1],nui0[Ne_obs+1],dnui0[Ne_obs+1],
-   tt[Nth+1],pp[Nph+1],weights[12],wght,
-   Risco,Z1,Z2,R_g,tau_tot,tau_tt,l_tot,za,zb,zc,s1,s2,zq,beta,eta,cpsi,spsi,
-   T_e,T_e0,T_d,T_d0,rho0,rho,n_e,rdsh,rdsh3,f_hard,flux,flux2,
-   kap10,kap20,kap1i,kap2i,normf,cth0,deg,psi,Rout_flux,
-   e_min,e_max,E_i,E_f,E_abs,E_em,Redge,dR,A_fact,A_fact2,
-   B_fact,G_fact,T_fact,D_fact,V_fact,V_tot,h_fact,
-   I_p,U_p,Q_p,psip,degp,Omg_d,Eph,f_Fe,N_Fe,sig_edge,
-   Ecirc,Lcirc,Eisco,Lisco,rdot,phidot,pow_i,pow_f,rdsh0,
-   pro,Rshell,dtau,dtau_es,kapp_es,r_es,rho_bar,R_atm,dR_atm,
-   z_screen,delmag,y2mag,E0,pdv_em,Sig,Delta,Carter,lambda,
-   alpha,omgb,omg,omgk,alpha2,omgb2,
-   Carter0,a2,r2,r3,wlo,whi,Nescape,Ndisk,Nscat,Ncapt,th_i,fov,dd,
-   Tmin,Tmax,Tobs,dTbin,mfp,dt_min,Iptot,Ipprod,eps_th,fcseed,
-   Afact_[Ne+1],Afact2_[Ne+1],Bnu_[Ne+1],B_nu[Ne+1],j_nu[Ne+1],
-   alpha_nu[Ne+1],tau_nu[Ne+1],E0_[Ne+1],Iph_[Ne+1],T_tab[Ne+1],Pnorm[Ne+1],
-   *rho_ijk,*T_ijk,*bb_ijk,*tau_ijk,*ut_ijk,*ur_ijk,*uz_ijk,*up_ijk,
-   *sigtau_ik,*Tdisk_ik,*emtop_ik,*embot_ik,*reftop_ik,*refbot_ik,
-   *emtop_elf_ik,*embot_elf_ik,*reftop_elf_ik,*refbot_elf_ik,
-   *Gtop_ik,*Gbot_ik,*corpow_ijk,
-   *y_print,*spec,*Iobs,*Ispec,*Qspec,*Uspec,*Ispec_s,*Qspec_s,*Uspec_s,
-   *Ispecr,*Rspecr,*Qspecr,*Uspecr,*Cspecr,*Lspec,*Inur,*Inur_NT,*qnur,*Rspec,
-   *movie,*y_pass,*l_pass,*I_r,*I_rph,*I_pass,*R_pass,*Ispecp,
-   *L_factr,*G_factr,*B_factr,*T_factr,
-   *adata,*bdata,**adata1,*bdata1,*xdata1,*image,*imagex,*imagey,
-   *spcimage,*spcimagex,*spcimagey,*phimage,*phimagex,*phimagey,
-   *x_clumps,*r_clumps;
+double t, r, dth, dph, dt, phi, ph0, mu, mu0, err, x, dl;
+double f, f_new, f_old, I_ll, I_rr, U_;
+double cth, sth, sth2, cth2, dcth, th0;
+double wc, nuc, Bmag, gam2, P0;
+double Risco, Z1, Z2, R_g, tau_tot, tau_tt, l_tot;
+double za, zb, zc, s1, s2, zq, beta, eta, cpsi, spsi;
+double T_e, T_e0, T_d, T_d0, rho0, rho, n_e, rdsh, rdsh3;
+double f_hard, flux, flux2;
+double kap10, kap20, kap1i, kap2i, normf, cth0, deg, psi, Rout_flux;
+double e_min, e_max, E_i, E_f, E_abs, E_em, Redge, dR;
+double A_fact, A_fact2, B_fact, G_fact, T_fact, D_fact, V_fact, V_tot, h_fact;
+double I_p, U_p, Q_p, psip, degp, Omg_d, Eph, f_Fe, N_Fe, sig_edge;
+double Ecirc, Lcirc, Eisco, Lisco, rdot, phidot, pow_i, pow_f, rdsh0;
+double pro, Rshell, dtau, dtau_es, kapp_es, r_es, rho_bar, R_atm, dR_atm;
+double z_screen, delmag, y2mag, E0, pdv_em, Sig, Delta, Carter, lambda;
+double alpha, omgb, omg, omgk, alpha2, omgb2, Carter0, a2, r2, r3;
+double wlo, whi, Nescape, Ndisk, Nscat, Ncapt, th_i, fov, dd;
+double Tmin, Tmax, Tobs, dTbin, mfp, dt_min;
+double Iptot, Ipprod, eps_th, fcseed;
+
+double Afact_[Ne+1], Afact2_[Ne+1], Bnu_[Ne+1], B_nu[Ne+1];
+double j_nu[Ne+1], alpha_nu[Ne+1], tau_nu[Ne+1], E0_[Ne+1], Iph_[Ne+1];
+double T_tab[Ne+1], Pnorm[Ne+1];
+
+double nu0[Ne+1], nu[Ne+1], dnu0[Ne+1], dnu[Ne+1];
+double rr[Nr+1], drr[Nr+1], rrb[Nr+2], ntT[Nr+1];
+double nui0[Ne_obs+1], dnui0[Ne_obs+1];
+double tt[Nth+1], pp[Nph+1], weights[12], wght;
+
+double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8];
+double e_x[3], e_y[3], x_[3], p_hat[3], r_hat[3], n_hat[3];
+double f_hat[3], fp_hat[3], z_hat[3], n_p_hat[3];
+double e_perp[3], e_parl[3], e_perp_f[3], e_parl_f[3];
+double e_x_hat[3], e_y_hat[3], e_z_hat[3];
+
+double part_x0[4], part_x[4], part_p[4], part_v[4], part_v_hat[4];
+double f0_[4], f_i[4], f_[4], ph_p[4], ph_v[4], ph_v_hat[4], ph_v_p[4];
+double v_[4], p_[4], po_[4], k_[4], f_v_hat[4];
+double dx_r[4], dx_th[4], dx_p[4];
+
+double g_up[4][4], g_dn[4][4];
+double g_up_ph[4][4], g_dn_ph[4][4];
+double e_lf[4][4], w_lf[4][4], e_lfs[4][4], w_lfs[4][4];
+double e_lf2[4][4], w_lf2[4][4];
+
+double *rho_ijk, *T_ijk, *bb_ijk, *tau_ijk;
+double *ut_ijk, *ur_ijk, *uz_ijk, *up_ijk;
+double *sigtau_ik, *Tdisk_ik, *emtop_ik, *embot_ik;
+double *reftop_ik, *refbot_ik;
+double *emtop_elf_ik, *embot_elf_ik, *reftop_elf_ik, *refbot_elf_ik;
+double *Gtop_ik, *Gbot_ik, *corpow_ijk;
+
+double *y_print, *spec, *Iobs, *Ispec, *Qspec, *Uspec;
+double *Ispec_s, *Qspec_s, *Uspec_s, *Ispecr, *Rspecr, *Qspecr, *Uspecr, *Cspecr;
+double *Lspec, *Inur, *Inur_NT, *qnur, *Rspec;
+double *movie, *y_pass, *l_pass, *I_r, *I_rph, *I_pass, *R_pass, *Ispecp;
+double *L_factr, *G_factr, *B_factr, *T_factr;
+double *adata, *bdata, **adata1, *bdata1, *xdata1;
+double *image, *imagex, *imagey, *spcimage, *spcimagex, *spcimagey;
+double *phimage, *phimagex, *phimagey;
+double *x_clumps, *r_clumps;
+
    double y0[8]={0,10,0,0,1,0,0,0},nu_cut=500.,dnu_cut=100.;
    long it,ip,ith,iph,jth,jph,je,jt,i,j,k,iv,ix,iy,ir,jr,Fe_phot,elo,ehi,
    view_jph,jquad,jphq,iv_Fe,
@@ -133,6 +155,7 @@ int main(int argc, char* argv[])
    iphstart,iphstop,iphstep;
    int signum,in_clump,ir_old,ir_new,jph_old,jph_new,ibottom,isbottom,
    old_zone,new_zone,*indx,*diskbody_ik;
+
    double big,temp;
    FILE *outfile,*outfile2;
    char fname1[100],fname2[100],fname3[100],fname4[100],fname5[100],fname6[100],
