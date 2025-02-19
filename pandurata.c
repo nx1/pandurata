@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
    double nui0[Ne_obs+1], dnui0[Ne_obs+1];
    double tt[Nth+1], pp[Nph+1], weights[12], wght;
 
-   double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8];
+   double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8]; // position and momentum [t,r,theta,phi,p_t,p_r,p_theta,p_phi]
    double e_x[3], e_y[3], x_[3], p_hat[3], r_hat[3], n_hat[3];
    double f_hat[3], fp_hat[3], z_hat[3], n_p_hat[3];
    double e_perp[3], e_parl[3], e_perp_f[3], e_parl_f[3];
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
    double v_[4], p_[4], po_[4], k_[4], f_v_hat[4];
    double dx_r[4], dx_th[4], dx_p[4];
 
-   double g_up[4][4], g_dn[4][4];
+   double g_up[4][4], g_dn[4][4];      // upper and lower Metric Tensors
    double g_up_ph[4][4], g_dn_ph[4][4];
    double e_lf[4][4], w_lf[4][4], e_lfs[4][4], w_lfs[4][4];
    double e_lf2[4][4], w_lf2[4][4];
@@ -157,6 +157,7 @@ int main(int argc, char* argv[])
    acc,steps,raydex,moddex,Nbins,dscat,iscat,isort,bigprint,imageprint,
    spec_model,rr_model,c_frame,just_scattered,irstart,irstop,irstep,
    iphstart,iphstop,iphstep;
+
    int signum,in_clump,ir_old,ir_new,jph_old,jph_new,ibottom,isbottom,
    old_zone,new_zone,*indx,*diskbody_ik;
 
@@ -531,6 +532,7 @@ int main(int argc, char* argv[])
             omgb = sqrt((Sig*Delta+2.*M*r*(a2+r2))/Sig*sin(t)*sin(t));
            
             // Calculate metric tensor g_{\mu \nu} and g^{\mu \nu}
+            // This seems pointless as later this is reset to the value of g_dn_ph and g_up_ph for further calculations
             for (j=0;j<=3;j++) part_x0[j]=y0[j];
             calc_g(g_dn, g_up, part_x0); 
 
@@ -538,7 +540,7 @@ int main(int argc, char* argv[])
                G_fact = Gtop_ik[indexr(ir,iph)];
                for (i=0;i<=3;i++) {
                   for (j=0;j<=3;j++) {
-                     e_lf[i][j]=emtop_elf_ik[indexelf(ir,iph,i,j)];
+                     e_lf[i][j] = emtop_elf_ik[indexelf(ir,iph,i,j)];
                   }
                }
             }
@@ -546,7 +548,7 @@ int main(int argc, char* argv[])
                G_fact = Gbot_ik[indexr(ir,iph)];
                for (i=0;i<=3;i++) {
                   for (j=0;j<=3;j++) {
-                     e_lf[i][j]=embot_elf_ik[indexelf(ir,iph,i,j)];
+                     e_lf[i][j] = embot_elf_ik[indexelf(ir,iph,i,j)];
                   }
                }
             }
@@ -624,7 +626,7 @@ int main(int argc, char* argv[])
                   moddex = raydex%numprocs;
                   err = erro;
                   dt = 1.0;
-                  l_tot=0;
+                  l_tot = 0;
                   Fe_phot = 0;
                   tau_tot = 0;
                   steps = 0;
@@ -756,7 +758,9 @@ int main(int argc, char* argv[])
                      t = y0[2];
                      f = y0[3];
                      for (j=0;j<=3;j++) part_x[j]=y0[j];
-                     calc_g(g_dn_ph,g_up_ph,part_x);
+
+                     calc_g(g_dn_ph, g_up_ph, part_x);
+
                      lookup_data(part_x,rr,tt,pp,g_dn_ph,
                                  rho_ijk,T_ijk,bb_ijk,ut_ijk,ur_ijk,uz_ijk,up_ijk,
                                  weights,&rho,&T_e,&Bmag,part_v);
@@ -997,9 +1001,9 @@ int main(int argc, char* argv[])
                   for (j=0;j<=3;j++) y0[j+4]=ph_p[j];
                   Carter0 = y0[6]*y0[6] + cos(y0[2])*cos(y0[2])*(y0[7]*y0[7]/(sin(y0[2])*sin(y0[2]))-y0[4]*y0[4]*a2);
                   for (j=0;j<=7;j++) {
-                     y[j]=y0[j];
-                     y1[j]=y[j];
-                     yn[j]=y[j];
+                     y[j] = y0[j];
+                     y1[j] = y[j];
+                     yn[j] = y[j];
                   }
                   calc_g(g_dn_ph,g_up_ph,yn);
                   ph_v[0] = g_up_ph[0][0]*yn[4] + g_up_ph[0][3]*yn[7];
@@ -1560,21 +1564,24 @@ int main(int argc, char* argv[])
                         //g_dn_ph[1][1]=g_dn_ph[2][2]/(r2-2*M*r+a2);
                         //g_dn_ph[3][3]=(r2+a2+2*M*a2*r*sth2/g_dn_ph[2][2])*sth2;
                         dtau = sqrt(g_dn_ph[1][1]*(yn[1]-y[1])*(yn[1]-y[1])
-                                    +g_dn_ph[2][2]*(yn[2]-y[2])*(yn[2]-y[2])
-                                    +g_dn_ph[3][3]*(yn[3]-y[3])*(yn[3]-y[3]));
-                        ph_v[0] = g_up_ph[0][0]*yn[4]+g_up_ph[0][3]*yn[7];
+                                  + g_dn_ph[2][2]*(yn[2]-y[2])*(yn[2]-y[2])
+                                  + g_dn_ph[3][3]*(yn[3]-y[3])*(yn[3]-y[3]));
+
+                        ph_v[0] = g_up_ph[0][0]*yn[4] + g_up_ph[0][3]*yn[7];
                         ph_v[1] = g_up_ph[1][1]*yn[5];
                         ph_v[2] = g_up_ph[2][2]*yn[6];
-                        ph_v[3] = g_up_ph[0][3]*yn[4]+g_up_ph[3][3]*yn[7];
+                        ph_v[3] = g_up_ph[0][3]*yn[4] + g_up_ph[3][3]*yn[7];
                         for (j=0;j<=3;j++) {
                            part_x[j]=yn[j];
                            k_[j]=ph_v[j];
                            p_[j]=yn[j+4];
                         }
                         
-                        //check to see if re-normalization necessary
-                        E_f = dot_g4(g_up_ph,p_,p_);
-                        if (fabs(E_f) > 1e-10) {
+                        
+                        E_f = dot_g4(g_up_ph, p_, p_);
+
+                        if (fabs(E_f) > 1e-10) { //check to see if re-normalization necessary
+                           printf("E_f > 1e-10 (%.2e) Normalizing...", E_f);
                            za = g_up_ph[0][0];
                            zb = 2.*yn[7]*g_up_ph[0][3];
                            zc = yn[5]*yn[5]*g_up_ph[1][1]+
