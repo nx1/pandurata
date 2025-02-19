@@ -81,6 +81,31 @@ void m_mult3(double A[3][3], double B[3][3], double C[3][3])
    }
 }
 
+void renormalize_momentum(double g_up_ph[4][4], double yn[8]) {
+    double za, zb, zc, zq, s1, s2;
+
+    za = g_up_ph[0][0];
+    zb = 2.0 * yn[7] * g_up_ph[0][3];
+    zc = yn[5] * yn[5] * g_up_ph[1][1]
+       + yn[6] * yn[6] * g_up_ph[2][2]
+       + yn[7] * yn[7] * g_up_ph[3][3];
+    zq = zb * zb - 4 * za * zc;
+
+    if (zq < 0) {
+        printf("normalization error\n");
+        return; // Exit early if normalization fails
+    }
+
+    if (zq > 0) {
+        s1 = (-zb + sqrt(zq)) / (2.0 * za);
+        s2 = (-zb - sqrt(zq)) / (2.0 * za);
+        yn[4] = (fabs(s1 - yn[4]) < fabs(s2 - yn[4])) ? s1 : s2;
+    }
+}
+
+
+
+
 
 int main(int argc, char* argv[])
 {
@@ -89,7 +114,7 @@ int main(int argc, char* argv[])
    double cth, sth, sth2, cth2, dcth, th0;
    double wc, nuc, Bmag, gam2, P0;
    double pro, Z1, Z2, R_g, tau_tot, tau_tt, l_tot;
-   double za, zb, zc, s1, s2, zq, beta, eta, cpsi, spsi;
+   double beta, eta, cpsi, spsi;
    double T_e, T_e0,  T_d0, rho, n_e;
    double f_hard, flux, flux2;
    double kap10, kap20, kap1i, kap2i, normf, cth0, deg, psi, Rout_flux;
@@ -1511,21 +1536,8 @@ int main(int argc, char* argv[])
                            
                            //re-normalize to ensure p_.p_=0
                            calc_g(g_dn_ph,g_up_ph,yn);
-                           za = g_up_ph[0][0];
-                           zb = 2.*yn[7]*g_up_ph[0][3];
-                           zc = yn[5]*yn[5]*g_up_ph[1][1]+
-                           yn[6]*yn[6]*g_up_ph[2][2]+yn[7]*yn[7]*g_up_ph[3][3];
-                           zq = zb*zb-4*za*zc;
-                           if (zq < 0) printf("normalization error\n");
-                           if (zq > 0) {
-                              s1 = (-zb+sqrt(zq))/(2.*za);
-                              s2 = (-zb-sqrt(zq))/(2.*za);
-                              if (fabs(s1-yn[4]) < fabs(s2-yn[4])) yn[4]= s1;
-                              if (fabs(s1-yn[4]) > fabs(s2-yn[4])) yn[4]= s2;
-                           }
-                           for (j=0;j<=3;j++) p_[j]=yn[j+4];
-                           E_f = dot_g4(g_up_ph,p_,p_);
-                           //if (fabs(E_f) > 1e-20) printf("a %g\n",E_f);
+                           renormalize_momentum(g_up_ph, yn);
+
                            for (j=0;j<=7;j++) {
                               y2[j]=yn[j];
                            }
@@ -1580,20 +1592,10 @@ int main(int argc, char* argv[])
                         
                         E_f = dot_g4(g_up_ph, p_, p_);
 
+
                         if (fabs(E_f) > 1e-10) { //check to see if re-normalization necessary
                            printf("E_f > 1e-10 (%.2e) Normalizing...", E_f);
-                           za = g_up_ph[0][0];
-                           zb = 2.*yn[7]*g_up_ph[0][3];
-                           zc = yn[5]*yn[5]*g_up_ph[1][1]+
-                           yn[6]*yn[6]*g_up_ph[2][2]+yn[7]*yn[7]*g_up_ph[3][3];
-                           zq = zb*zb-4*za*zc;
-                           if (zq < 0) printf("normalization error\n");
-                           if (zq > 0) {
-                              s1 = (-zb+sqrt(zq))/(2.*za);
-                              s2 = (-zb-sqrt(zq))/(2.*za);
-                              if (fabs(s1-yn[4]) < fabs(s2-yn[4])) yn[4]= s1;
-                              if (fabs(s1-yn[4]) > fabs(s2-yn[4])) yn[4]= s2;
-                           }
+                           renormalize_momentum(g_up_ph, yn);
                         }
                         
                         lookup_data(part_x,rr,tt,pp,g_dn_ph,
@@ -2045,18 +2047,7 @@ int main(int argc, char* argv[])
                            E_f = dot_g4(g_up_ph,p_,p_);
                            
                            if (fabs(E_f) > 1e-10) {
-                              za = g_up_ph[0][0];
-                              zb = 2.*yn[7]*g_up_ph[0][3];
-                              zc = yn[5]*yn[5]*g_up_ph[1][1]+
-                              yn[6]*yn[6]*g_up_ph[2][2]+yn[7]*yn[7]*g_up_ph[3][3];
-                              zq = zb*zb-4*za*zc;
-                              if (zq < 0) printf("normalization error\n");
-                              if (zq > 0) {
-                                 s1 = (-zb+sqrt(zq))/(2.*za);
-                                 s2 = (-zb-sqrt(zq))/(2.*za);
-                                 if (fabs(s1-yn[4]) < fabs(s2-yn[4])) yn[4]= s1;
-                                 if (fabs(s1-yn[4]) > fabs(s2-yn[4])) yn[4]= s2;
-                              }
+                               renormalize_momentum(g_up_ph, yn);
                            }
                            Fe_phot = 0;
                         }
