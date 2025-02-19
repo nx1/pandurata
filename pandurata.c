@@ -986,10 +986,10 @@ int main(int argc, char* argv[])
                      yn[j]=y[j];
                   }
                   calc_g(g_dn_ph,g_up_ph,yn);
-                  ph_v[0] = g_up_ph[0][0]*yn[4]+g_up_ph[0][3]*yn[7];
+                  ph_v[0] = g_up_ph[0][0]*yn[4] + g_up_ph[0][3]*yn[7];
                   ph_v[1] = g_up_ph[1][1]*yn[5];
                   ph_v[2] = g_up_ph[2][2]*yn[6];
-                  ph_v[3] = g_up_ph[0][3]*yn[4]+g_up_ph[3][3]*yn[7];
+                  ph_v[3] = g_up_ph[0][3]*yn[4] + g_up_ph[3][3]*yn[7];
                   for (j=0;j<=3;j++) {
                      p_[j]=yn[j+4];
                   }
@@ -1955,8 +1955,11 @@ int main(int argc, char* argv[])
                               printf("%g %g %g %g %g %g %g %g\n",rdsh,ph_v_hat[0],E_f,
                                      //beta,n_hat[0],n_hat[1],n_hat[2]);
                                      v_[0],v_[1],v_[2],v_[3],dot_g4(g_dn_ph,v_,v_));
-                              E_f = -ph_v_hat[0]*ph_v_hat[0]+ph_v_hat[1]*ph_v_hat[1]
-                              +ph_v_hat[2]*ph_v_hat[2]+ph_v_hat[3]*ph_v_hat[3];
+
+                              E_f = - ph_v_hat[0]*ph_v_hat[0]
+                                    + ph_v_hat[1]*ph_v_hat[1]
+                                    + ph_v_hat[2]*ph_v_hat[2]
+                                    + ph_v_hat[3]*ph_v_hat[3];
                               //printf("%g %g\n",E0,E_f);
                            }
 
@@ -1967,18 +1970,14 @@ int main(int argc, char* argv[])
                            }
                            
                            for (j=1;j<=3;j++) {
-                              f_v_hat[j]=f_v_hat[j]-f_v_hat[0]*ph_v_hat[j]/ph_v_hat[0];
+                              f_v_hat[j] = f_v_hat[j] - f_v_hat[0]*ph_v_hat[j]/ph_v_hat[0];
                            }
-                           f_v_hat[0]=0;
-                           
-                           E_f = ph_v_hat[0];
-                           E0 = E_f;
-                           //printf("Ef/Ei = %12.5g %12.5g %12.5g\n",E_f/E_i, E_f,A_fact);
-                           //fprintf(outfile,"%12.5g\n",Z1);
-                           
+                           f_v_hat[0] = 0;
+                          
+                                                      
                            for (i=0;i<=3;i++) {
-                              ph_v_p[i]=0;
-                              f_[i]=0;
+                              ph_v_p[i] = 0;
+                              f_[i] = 0;
                               for (j=0;j<=3;j++) {
                                  ph_v_p[i]+=e_lfs[j][i]*ph_v_hat[j];
                                  f_[i]+=e_lfs[j][i]*f_v_hat[j];
