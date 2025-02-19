@@ -84,69 +84,73 @@ void m_mult3(double A[3][3], double B[3][3], double C[3][3])
 
 int main(int argc, char* argv[])
 {
-double t, r, dth, dph, dt, phi, ph0, mu, mu0, err, x, dl;
-double f, f_new, f_old, I_ll, I_rr, U_;
-double cth, sth, sth2, cth2, dcth, th0;
-double wc, nuc, Bmag, gam2, P0;
-double Risco, Z1, Z2, R_g, tau_tot, tau_tt, l_tot;
-double za, zb, zc, s1, s2, zq, beta, eta, cpsi, spsi;
-double T_e, T_e0,  T_d0, rho, n_e, rdsh, rdsh3;
-double f_hard, flux, flux2;
-double kap10, kap20, kap1i, kap2i, normf, cth0, deg, psi, Rout_flux;
-double e_min, e_max, E_i, E_f, E_abs, E_em, Redge;
-double A_fact, A_fact2, B_fact, G_fact, T_fact, D_fact, V_fact, V_tot, h_fact;
-double I_p, U_p, Q_p, psip, degp, Eph, f_Fe, N_Fe, sig_edge;
-double Lisco, Eisco, pow_i, pow_f, rdsh0;
-double pro, Rshell, dtau, dtau_es, kapp_es, r_es, rho_bar;
-double delmag, E0, pdv_em, Sig, Delta, Carter, lambda;
-double alpha, omgb, omg, Carter0, a2, r2, r3;
-double wlo, whi, Nescape, Ndisk, Nscat, Ncapt, fov, dd;
-double Tmin, Tmax, dTbin;
-double Iptot, eps_th, fcseed;
+   double r, t, phi, dth, dph, dt, ph0, mu, mu0, err, x, dl;
+   double f, f_new, f_old, I_ll, I_rr, U_;
+   double cth, sth, sth2, cth2, dcth, th0;
+   double wc, nuc, Bmag, gam2, P0;
+   double pro, Z1, Z2, R_g, tau_tot, tau_tt, l_tot;
+   double za, zb, zc, s1, s2, zq, beta, eta, cpsi, spsi;
+   double T_e, T_e0,  T_d0, rho, n_e;
+   double f_hard, flux, flux2;
+   double kap10, kap20, kap1i, kap2i, normf, cth0, deg, psi, Rout_flux;
+   double e_min, e_max, E_i, E_f, E_abs, E_em;
+   double A_fact, A_fact2, B_fact, G_fact, T_fact, D_fact, V_fact, V_tot, h_fact;
+   double I_p, U_p, Q_p, psip, degp, Eph, f_Fe, N_Fe, sig_edge;
+   double Risco, Redge, Lisco, Eisco, Rshell;
+   double rdsh, rdsh0, rdsh3, pdv_em;
+   double pow_i, pow_f;
+   double dtau, dtau_es, kapp_es, r_es, rho_bar;
+   double delmag, E0, Sig, Delta, Carter, lambda;
+   double alpha, omgb, omg, Carter0, a2, r2, r3;
+   double wlo, whi, Nescape, Ndisk, Nscat, Ncapt, fov, dd;
+   double Tmin, Tmax, dTbin;
+   double Iptot, eps_th, fcseed;
 
-double Bnu_[Ne+1], B_nu[Ne+1];
-double j_nu[Ne+1], alpha_nu[Ne+1];
-double T_tab[Ne+1], Pnorm[Ne+1];
+   double Bnu_[Ne+1], B_nu[Ne+1];
+   double j_nu[Ne+1], alpha_nu[Ne+1];
+   double T_tab[Ne+1], Pnorm[Ne+1];
 
-double nu0[Ne+1], nu[Ne+1], dnu0[Ne+1], dnu[Ne+1];
-double rr[Nr+1], drr[Nr+1], rrb[Nr+2], ntT[Nr+1];
-double nui0[Ne_obs+1], dnui0[Ne_obs+1];
-double tt[Nth+1], pp[Nph+1], weights[12], wght;
+   double nu0[Ne+1], nu[Ne+1], dnu0[Ne+1], dnu[Ne+1];
+   double rr[Nr+1], drr[Nr+1], rrb[Nr+2], ntT[Nr+1];
+   double nui0[Ne_obs+1], dnui0[Ne_obs+1];
+   double tt[Nth+1], pp[Nph+1], weights[12], wght;
 
-double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8];
-double e_x[3], e_y[3], x_[3], p_hat[3], r_hat[3], n_hat[3];
-double f_hat[3], fp_hat[3], z_hat[3], n_p_hat[3];
-double e_perp[3], e_parl[3], e_perp_f[3], e_parl_f[3];
-double e_x_hat[3], e_y_hat[3], e_z_hat[3];
+   double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8];
+   double e_x[3], e_y[3], x_[3], p_hat[3], r_hat[3], n_hat[3];
+   double f_hat[3], fp_hat[3], z_hat[3], n_p_hat[3];
+   double e_perp[3], e_parl[3], e_perp_f[3], e_parl_f[3];
+   double e_x_hat[3], e_y_hat[3], e_z_hat[3];
 
-double part_x0[4], part_x[4], part_p[4], part_v[4], part_v_hat[4];
-double f0_[4], f_i[4], f_[4], ph_p[4], ph_v[4], ph_v_hat[4], ph_v_p[4];
-double v_[4], p_[4], po_[4], k_[4], f_v_hat[4];
-double dx_r[4], dx_th[4], dx_p[4];
+   double part_x0[4], part_x[4], part_p[4], part_v[4], part_v_hat[4];
+   double f0_[4], f_i[4], f_[4], ph_p[4], ph_v[4], ph_v_hat[4], ph_v_p[4];
+   double v_[4], p_[4], po_[4], k_[4], f_v_hat[4];
+   double dx_r[4], dx_th[4], dx_p[4];
 
-double g_up[4][4], g_dn[4][4];
-double g_up_ph[4][4], g_dn_ph[4][4];
-double e_lf[4][4], w_lf[4][4], e_lfs[4][4], w_lfs[4][4];
-double e_lf2[4][4], w_lf2[4][4];
+   double g_up[4][4], g_dn[4][4];
+   double g_up_ph[4][4], g_dn_ph[4][4];
+   double e_lf[4][4], w_lf[4][4], e_lfs[4][4], w_lfs[4][4];
+   double e_lf2[4][4], w_lf2[4][4];
 
-double *rho_ijk, *T_ijk, *bb_ijk, *tau_ijk;
-double *ut_ijk, *ur_ijk, *uz_ijk, *up_ijk;
-double *sigtau_ik, *Tdisk_ik, *emtop_ik, *embot_ik;
-double *reftop_ik, *refbot_ik;
-double *emtop_elf_ik, *embot_elf_ik, *reftop_elf_ik, *refbot_elf_ik;
-double *Gtop_ik, *Gbot_ik, *corpow_ijk;
+   double *rho_ijk, *T_ijk, *bb_ijk, *tau_ijk;
+   double *ut_ijk, *ur_ijk, *uz_ijk, *up_ijk;
+   double *sigtau_ik, *Tdisk_ik, *emtop_ik, *embot_ik;
+   double *reftop_ik, *refbot_ik;
+   double *emtop_elf_ik, *embot_elf_ik, *reftop_elf_ik, *refbot_elf_ik;
+   double *Gtop_ik, *Gbot_ik, *corpow_ijk;
 
-double *Iobs, *Ispec, *Qspec, *Uspec;
-double *Ispec_s, *Qspec_s, *Uspec_s, *Ispecr, *Rspecr, *Qspecr, *Uspecr, *Cspecr;
-double *Lspec, *Inur, *Inur_NT, *qnur, *Rspec;
-double *y_pass, *l_pass, *I_r, *I_rph, *I_pass, *R_pass, *Ispecp;
-double *L_factr, *G_factr, *B_factr, *T_factr;
-double *adata, *bdata, **adata1, *bdata1, *xdata1;
-double *image, *imagex, *imagey, *spcimage, *spcimagex, *spcimagey;
-double *phimage, *phimagex, *phimagey;
-double *x_clumps, *r_clumps;
+   double *Iobs, *Ispec, *Qspec, *Uspec;
+   double *Ispec_s, *Qspec_s, *Uspec_s;
+   double *Ispecr, *Rspecr, *Qspecr, *Uspecr, *Cspecr;
+   double *Lspec, *Inur, *Inur_NT, *qnur, *Rspec;
+   double *y_pass, *l_pass, *I_r, *I_rph, *I_pass, *R_pass, *Ispecp;
+   double *L_factr, *G_factr, *B_factr, *T_factr;
+   double *adata, *bdata, **adata1, *bdata1, *xdata1;
+   double *image, *imagex, *imagey, *spcimage, *spcimagex, *spcimagey;
+   double *phimage, *phimagex, *phimagey;
+   double *x_clumps, *r_clumps;
 
-   double y0[8]={0,10,0,0,1,0,0,0},nu_cut=500.,dnu_cut=100.;
+   double y0[8]={0,10,0,0,1,0,0,0}, nu_cut=500., dnu_cut=100.;
+
    long it,ip,ith,iph,jth,jph,je,jt,i,j,k,iv,ix,iy,ir,jr,Fe_phot,elo,ehi,
    view_jph,jquad,jphq,iv_Fe,
    file_ik,file_ih,file_iu,file_id,Nscat_tot[100],
@@ -568,10 +572,6 @@ double *x_clumps, *r_clumps;
                        "part_v[3]: %10.4e  T_e0: %10.4e  diskbody_ik: %d\n",
                         ir, iph, rr[ir], y0[2], y0[3], part_v[0], part_v[1], 
                         part_v[2], part_v[3], T_e0, diskbody_ik[indexr(ir, iph)]);
-
-               //printf("%d %d %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %d\n",
-               //     ir,iph,rr[ir],y0[2],y0[3],part_v[0],part_v[1],
-               //     part_v[2],part_v[3],T_e0,diskbody_ik[indexr(ir,iph)]);
                
                T_e0=T_e0*f_hard;
                for (j=0;j<=Ne;j++) {
@@ -725,10 +725,9 @@ double *x_clumps, *r_clumps;
                         }
                         if ((it < 0)&&(ip < 0)) {
                            printf("%10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e\n",
-                                  nu[40],nu[50],nu[60],nu[70],nu[80],nu[90],nu[100]);
+                                   nu[40],nu[50],nu[60],nu[70],nu[80],nu[90],nu[100]);
                            printf("%10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e\n",
-                                  Bnu_[40],Bnu_[50],Bnu_[60],Bnu_[70],Bnu_[80],Bnu_[90],Bnu_[100],
-                                  T_e0);
+                                   Bnu_[40],Bnu_[50],Bnu_[60],Bnu_[70],Bnu_[80],Bnu_[90],Bnu_[100], T_e0);
                         }
                         if (diskbody_ik[indexr(ir,iph)] == 0) A_fact =0;
                         if (Tdisk_ik[indexr(ir,iph)] == 0) A_fact = 0;
@@ -791,8 +790,7 @@ double *x_clumps, *r_clumps;
                      deg = 0;
                      
                      //Proper volume in emitter frame
-                     calc_dV(e_lf,w_lf,g_up_ph,g_dn_ph,part_p,part_v,
-                             dx_r,dx_th,dx_p,&V_fact,&G_fact);
+                     calc_dV(e_lf, w_lf, g_up_ph, g_dn_ph, part_p, part_v, dx_r, dx_th, dx_p, &V_fact, &G_fact);
                      //For consistency with disk surface, treat coronal volume
                      //element as a surface with area G_fact and thickness h_fact,
                      //such that V_fact = G_fact*h_fact
@@ -861,11 +859,8 @@ double *x_clumps, *r_clumps;
                            Iptot+=dnu0[iv]*j_nu[iv]*2.42e17*4.*PI;
                         }
                         if ((it < 0)&&(ip < 0)) {
-                           printf("%10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e\n",
-                                  nu[10],nu[20],nu[30],nu[70],nu[80],nu[90],nu[100]);
-                           printf("%10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e\n",
-                                  Bnu_[10],Bnu_[20],Bnu_[30],Bnu_[70],Bnu_[80],Bnu_[90],Bnu_[100],
-                                  wc,gam2,T_e,sqrt(Bmag));
+                           printf("%10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e\n", nu[10],nu[20],nu[30],nu[70],nu[80],nu[90],nu[100]);
+                           printf("%10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e\n", Bnu_[10],Bnu_[20],Bnu_[30],Bnu_[70],Bnu_[80],Bnu_[90],Bnu_[100], wc,gam2,T_e,sqrt(Bmag));
                         }
                      }
                      //THERMAL SYNCHROTRON EMISSION
@@ -977,7 +972,7 @@ double *x_clumps, *r_clumps;
                   f0_[1]  = e_lf[0][1]*(0.)+e_lf[1][1]*f_hat[0] + e_lf[2][1]*f_hat[1]+e_lf[3][1]*f_hat[2];
                   f0_[2]  = e_lf[0][2]*(0.)+e_lf[1][2]*f_hat[0] + e_lf[2][2]*f_hat[1]+e_lf[3][2]*f_hat[2];
                   f0_[3]  = e_lf[0][3]*(0.)+e_lf[1][3]*f_hat[0] + e_lf[2][3]*f_hat[1]+e_lf[3][3]*f_hat[2];
-                  //E0 = dot_g4(g_dn_ph,ph_v,ph_v);
+                  //E0 = dot_g4(g_dn_ph, ph_v, ph_v);
                   //if (fabs(E0) > 1e-3)
                   //printf("%d %d %d %g %g\n",steps,iscat,dscat,dot_g4(g_dn_ph,ph_v,ph_v),yn[1]);
                   kap10 = aa*cos(t)*((ph_v[0]*f0_[1]-ph_v[1]*f0_[0]) 
@@ -993,16 +988,14 @@ double *x_clumps, *r_clumps;
                   kap1i = kap10;
                   kap2i = kap20;
                   
-                  ph_p[0] = g_dn[0][0]*ph_v[0]+g_dn[0][3]*ph_v[3];
+                  ph_p[0] = g_dn[0][0]*ph_v[0] + g_dn[0][3]*ph_v[3];
                   ph_p[1] = g_dn[1][1]*ph_v[1];
                   ph_p[2] = g_dn[2][2]*ph_v[2];
-                  ph_p[3] = g_dn[3][0]*ph_v[0]+g_dn[3][3]*ph_v[3];
-                  pdv_em = (ph_p[0]*part_v[0]+ph_p[1]*part_v[1]+
-                            ph_p[2]*part_v[2]+ph_p[3]*part_v[3]);
+                  ph_p[3] = g_dn[3][0]*ph_v[0] + g_dn[3][3]*ph_v[3];
+                  pdv_em = ph_p[0]*part_v[0]+ph_p[1]*part_v[1] + ph_p[2]*part_v[2]+ph_p[3]*part_v[3];
                   
                   for (j=0;j<=3;j++) y0[j+4]=ph_p[j];
-                  Carter0 = y0[6]*y0[6]+cos(y0[2])*cos(y0[2])*
-                  (y0[7]*y0[7]/(sin(y0[2])*sin(y0[2]))-y0[4]*y0[4]*a2);
+                  Carter0 = y0[6]*y0[6] + cos(y0[2])*cos(y0[2])*(y0[7]*y0[7]/(sin(y0[2])*sin(y0[2]))-y0[4]*y0[4]*a2);
                   for (j=0;j<=7;j++) {
                      y[j]=y0[j];
                      y1[j]=y[j];
@@ -1133,16 +1126,14 @@ double *x_clumps, *r_clumps;
                               + g_dn_ph[3][3]    * v_[3] * v_[3];
 
                            if (E0 > -0.99) printf("vdisk %ld %g %g %g\n",steps,E0,r,yn[2]);
-                           
-                           
+
                            po_[0] = g_dn_ph[0][0]*v_[0]+g_dn_ph[0][3]*v_[3];
                            po_[1] = g_dn_ph[1][1]*v_[1];
                            po_[2] = g_dn_ph[2][2]*v_[2];
                            po_[3] = g_dn_ph[0][3]*v_[0]+g_dn_ph[3][3]*v_[3];
                            
                            //rdsh is redshift of incident photons as measured by disk
-                           rdsh = (v_[0]*p_[0]+v_[1]*p_[1]+v_[2]*p_[2]+v_[3]*p_[3])/
-                           pdv_em;
+                           rdsh = (v_[0]*p_[0]+v_[1]*p_[1]+v_[2]*p_[2]+v_[3]*p_[3]) / pdv_em;
                            for (iv=0;iv<=Ne;iv++) {
                               nu[iv] = nu[iv]*rdsh;
                               dnu[iv] = dnu[iv]*rdsh;
@@ -1374,7 +1365,7 @@ double *x_clumps, *r_clumps;
                            
                            //NON-ELASTIC SCATTERING- LOSE ENERGY TO ELECTRON
                            //(THIS SEEMS NOT QUITE RIGHT FOR DIFFUSE REFLECTION)
-                           for (iv=0;iv<=Ne;iv++) {
+                           for (iv=0; iv<=Ne; iv++) {
                               rdsh = 1./(1.+nu[iv]*(1./511.)*(1.-cth));
                               //ELASTIC SCATTERING
                               rdsh = 1.;
@@ -1483,21 +1474,21 @@ double *x_clumps, *r_clumps;
                            deg = degp;
                            A_fact = A_fact*I_p;
                            kap1i = aa*cos(t)*((ph_v_p[0]*f_[1]-ph_v_p[1]*f_[0])
-                                              +aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))
-                           +r*sin(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
-                                      -aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
+                                 + aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))
+                                 + r*sin(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
+                                 - aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
+
                            kap2i = r*(ph_v_p[0]*f_[1]-ph_v_p[1]*f_[0]
-                                      +aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))-
-                           aa*sin(t)*cos(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
-                                             -aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
+                                 + aa*sin(t)*sin(t)*(ph_v_p[1]*f_[3]-ph_v_p[3]*f_[1]))
+                                 - aa*sin(t)*cos(t)*((r*r+aa*aa)*(ph_v_p[3]*f_[2]-ph_v_p[2]*f_[3])
+                                 - aa*(ph_v_p[0]*f_[2]-ph_v_p[2]*f_[0]));
                            
                            yn[4] = g_dn_ph[0][0]*ph_v_p[0]+g_dn_ph[0][3]*ph_v_p[3];
                            yn[5] = g_dn_ph[1][1]*ph_v_p[1];
                            yn[6] = g_dn_ph[2][2]*ph_v_p[2];
                            yn[7] = g_dn_ph[0][3]*ph_v_p[0]+g_dn_ph[3][3]*ph_v_p[3];
                            E_f = -yn[4];
-                           pdv_em = (ph_v_p[0]*po_[0]+ph_v_p[1]*po_[1]+
-                                     ph_v_p[2]*po_[2]+ph_v_p[3]*po_[3]);
+                           pdv_em = ph_v_p[0]*po_[0]+ph_v_p[1]*po_[1] + ph_v_p[2]*po_[2]+ph_v_p[3]*po_[3];
                            
                            if ((E_f/E_i > 5e5)&&(E_f/E_i < 5e5)) {
                               printf("Ef/Ei = %12.5e %12.5e %12.5e %12.5e %12.5e\n",
@@ -1623,8 +1614,7 @@ double *x_clumps, *r_clumps;
                            //rdsh is redshift of photon packet in corona rest frame,
                            //relative to the point of last measurement
                            for (j=0;j<=3;j++) p_[j]=yn[j+4];
-                           rdsh = (v_[0]*p_[0]+v_[1]*p_[1]+v_[2]*p_[2]+v_[3]*p_[3])/
-                           pdv_em;
+                           rdsh = (v_[0]*p_[0]+v_[1]*p_[1]+v_[2]*p_[2]+v_[3]*p_[3]) / pdv_em;
                            for (iv=0;iv<=Ne;iv++) {
                               nu[iv] = nu[iv]*rdsh;
                               dnu[iv] = dnu[iv]*rdsh;
@@ -1823,7 +1813,8 @@ double *x_clumps, *r_clumps;
                               + g_dn_ph[2][2] * k_[2]*k_[2]
                               + g_dn_ph[3][3] * k_[3]*k_[3];
 
-                           //printf("a %d %g\n",steps,E0);
+                           // printf("E0 from g_mu:     E0=%.2e\n", E0);
+
                            ludcmp_js(adata1,4,indx,&dd);
                            for (j=0;j<=3;j++) bdata1[j+1]=k_[j];
                            lubksb_js(adata1,4,indx,bdata1);
@@ -1836,12 +1827,13 @@ double *x_clumps, *r_clumps;
                                 + ph_v_hat[1]*ph_v_hat[1]
                                 + ph_v_hat[2]*ph_v_hat[2]
                                 + ph_v_hat[3]*ph_v_hat[3];
-                           //printf("ap %g\n",E0);
-                           
-                           //printf("pre-scatter p0  %12.5g\n",ph_v_hat[0]);
+
+                           // printf("E0 from ph_v_hat: E0=%.2e\n", E0);
+                           // printf("pre-scatter:      p0=%.2e\n", ph_v_hat[0]);
+
                            E_i = ph_v_hat[0];
                            //PICK RANDOM 3-VELOCITY FOR ELECTRON IN CORONA FRAME
-                           lambda = (double)rand()/(RAND_MAX);
+                           lambda = (double)rand() / (RAND_MAX);
 
                            //ELECTRON TEMP IN MeV
                            T_e = T_e/(11000.)/1.0e6;
@@ -1931,7 +1923,7 @@ double *x_clumps, *r_clumps;
                            //E_f = n_p_hat[0]*n_p_hat[0]+n_p_hat[1]*n_p_hat[1]+n_p_hat[2]*n_p_hat[2];
                            //E_f = f_hat[0]*e_z_hat[0]+f_hat[1]*e_z_hat[1]+f_hat[2]*e_z_hat[2];
                            if (fabs(E0) > 1e-2) {
-                               printf("b: E0 = %g  E_f = %g  E_i = %g\n", E0, E_f, E_i);
+                               printf("E0 = %.2e  E_f = %.2e  E_i = %.2e ir=%ld iph=%ld it=%ld  \n", E0, E_f, E_i, ir, iph, it);
                            }
                            cross(e_z_hat,n_p_hat,e_perp);
                            normalize(e_perp);
@@ -1970,9 +1962,11 @@ double *x_clumps, *r_clumps;
                            //       E0,dot_g4(g_up_ph,p_,p_),dot_g4(g_dn_ph,v_,v_),yn[1],yn[2],rdsh);
                            //       sleep(1);
                            //}
+                           
                            boost(beta,n_hat,ph_v_hat);
                            boost(beta,n_hat,f_v_hat);
-                           rdsh = ph_v_hat[0]/E_f;
+
+                           rdsh = ph_v_hat[0] / E_f;
                            
                            if (rdsh < 0) {
                               printf("%g %g %g %g %g %g %g %g\n",rdsh,ph_v_hat[0],E_f,
