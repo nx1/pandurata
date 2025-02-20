@@ -633,7 +633,7 @@ int main(int argc, char* argv[])
                flux = 0;
                for (j=0;j<=Ne;j++) flux+=Inur[indexre(ir,j)]*dnu0[j];
                //printf("%12.5e %12.5e\n",Inur[indexre(ir,50)],flux*PI);
-               if (fmod(ir,10) < 0) Kerr {
+               if (fmod(ir,10) < 0) {
                   printf("e_tlf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[0][0],e_lf[0][1],e_lf[0][2],e_lf[0][3]);
                   printf("e_xlf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[1][0],e_lf[1][1],e_lf[1][2],e_lf[1][3]);
                   printf("e_ylf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[2][0],e_lf[2][1],e_lf[2][2],e_lf[2][3]);
