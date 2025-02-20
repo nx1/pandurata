@@ -81,10 +81,11 @@ void m_mult3(double A[3][3], double B[3][3], double C[3][3])
    }
 }
 
+// Normalize the 4-momentum so that p . p = 0
 void renormalize_momentum(double g_up_ph[4][4], double yn[8]) {
     double za, zb, zc, zq, s1, s2;
 
-    printf("Starting renormalization...\n");
+    printf("Renormalizing momentum...\n");
     printf("Initial yn[4]: %.5e\n", yn[4]);
 
     za = g_up_ph[0][0];
@@ -99,7 +100,7 @@ void renormalize_momentum(double g_up_ph[4][4], double yn[8]) {
 
     if (zq < 0) {
         printf("Normalization error: zq < 0 (%.5e), skipping renormalization.\n", zq);
-        return; // Exit early if normalization fails
+        return;
     }
 
     if (zq > 0) {
@@ -109,10 +110,10 @@ void renormalize_momentum(double g_up_ph[4][4], double yn[8]) {
         printf("Previous yn[4]: %.5e\n", yn[4]);
         if (fabs(s1 - yn[4]) < fabs(s2 - yn[4])) {
             yn[4] = s1;
-            printf("new yn[4]     : %.5e\n   (s1)", yn[4]);
+            printf("new yn[4]     : %.5e\n   (s1)\n", yn[4]);
         } else {
             yn[4] = s2;
-            printf("new yn[4]     : %.5e\n   (s2)", yn[4]);
+            printf("new yn[4]     : %.5e\n   (s2)\n", yn[4]);
         }
     }
 }
@@ -154,7 +155,7 @@ int main(int argc, char* argv[])
    double nui0[Ne_obs+1], dnui0[Ne_obs+1];
    double tt[Nth+1], pp[Nph+1], weights[12], wght;
 
-   double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8]; // position and momentum [t,r,theta,phi,p_t,p_r,p_theta,p_phi]
+   double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8]; // position & momentum [t,r,theta,phi,p_t,p_r,p_theta,p_phi]
    double e_x[3], e_y[3], x_[3], p_hat[3], r_hat[3], n_hat[3];
    double f_hat[3], fp_hat[3], z_hat[3], n_p_hat[3];
    double e_perp[3], e_parl[3], e_perp_f[3], e_parl_f[3];
@@ -552,23 +553,26 @@ int main(int argc, char* argv[])
       for (ir=irstart; ir<=irstop; ir+=irstep) {
          for (iph=iphstart; iph<=iphstop; iph+=iphstep) {
             srand(ibottom*(Nr+1)*(Nph+1)+ir*(Nph+1)+iph+RUN_ID*0);
-            y0[0] = 0;
-            y0[1] = rr[ir];
-            if (ibottom == 0) y0[2] = emtop_ik[indexr(ir,iph)] - eps_th;
+
+            y0[0] = 0;       // Set time to 0
+            y0[1] = rr[ir];  // Set r to current radius
+            if (ibottom == 0) y0[2] = emtop_ik[indexr(ir,iph)] - eps_th;  // Set theta to either top or bottom
             if (ibottom == 1) y0[2] = embot_ik[indexr(ir,iph)] + eps_th;
-            y0[3] = pp[iph];
+            y0[3] = pp[iph]; // set phi to current
             //lambda = (double)rand()/(RAND_MAX);
             //y0[3]=y0[3]+((int)(lambda*4.))*PI/2.;
             r = y0[1];
             t = y0[2];
             f = y0[3];
-            r2 = r*r;
-            r3 = r*r2;
-            Sig = r*r+a2*cos(t)*cos(t);      //rho^2 in some texts
-            Delta = r*r-2*M*r+a2;
+
+            // Calculate quantities for Metric Tensor
+            r2    = r*r;
+            r3    = r*r2;
+            Sig   = r*r + a2*cos(t)*cos(t);      //rho^2 in some texts
+            Delta = r*r - 2*M*r+a2;
             alpha = sqrt(Sig*Delta/(Sig*Delta+2*M*r*(a2+r2)));
-            omg = 2.*M*r*aa/(Sig*Delta+2.*M*r*(a2+r2));
-            omgb = sqrt((Sig*Delta+2.*M*r*(a2+r2))/Sig*sin(t)*sin(t));
+            omg   = 2.*M*r*aa/(Sig*Delta+2.*M*r*(a2+r2));
+            omgb  = sqrt((Sig*Delta+2.*M*r*(a2+r2))/Sig*sin(t)*sin(t));
            
             // Calculate metric tensor g_{\mu \nu} and g^{\mu \nu}
             // This seems pointless as later this is reset to the value of g_dn_ph and g_up_ph for further calculations
@@ -614,7 +618,7 @@ int main(int argc, char* argv[])
                         ir, iph, rr[ir], y0[2], y0[3], part_v[0], part_v[1], 
                         part_v[2], part_v[3], T_e0, diskbody_ik[indexr(ir, iph)]);
                
-               T_e0=T_e0*f_hard;
+               T_e0 = T_e0*f_hard;
                for (j=0;j<=Ne;j++) {
                   if (T_e0 <= 0) {
                      Inur[indexre(ir,j)]=0;
@@ -629,7 +633,7 @@ int main(int argc, char* argv[])
                flux = 0;
                for (j=0;j<=Ne;j++) flux+=Inur[indexre(ir,j)]*dnu0[j];
                //printf("%12.5e %12.5e\n",Inur[indexre(ir,50)],flux*PI);
-               if (fmod(ir,10) < 0) {
+               if (fmod(ir,10) < 0) Kerr {
                   printf("e_tlf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[0][0],e_lf[0][1],e_lf[0][2],e_lf[0][3]);
                   printf("e_xlf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[1][0],e_lf[1][1],e_lf[1][2],e_lf[1][3]);
                   printf("e_ylf: %12.5e %12.5e %12.5e %12.5e\n", e_lf[2][0],e_lf[2][1],e_lf[2][2],e_lf[2][3]);
@@ -682,10 +686,9 @@ int main(int argc, char* argv[])
                      // Use this for isotropic emission
                      //if ((rr[ir]<Redge)&&(atm_model==1.5)) cth = 1.-2.*lambda;
                      
-                     sth = sqrt(1.-cth*cth); // sin(theta) = sqrt( 1 - cos^2(theta))
-
+                     sth = sqrt(1.-cth*cth);                // sin(theta) = sqrt( 1 - cos^2(theta))
                      lambda = (double)rand() / (RAND_MAX);  // Get New value random val 0-1
-                     phi = 2.*PI*lambda;                    // Get Azimuthal Angle
+                     phi = 2.*PI*lambda;                    // Get Random Azimuthal Angle
                      
                      r = y0[1];
                      t = y0[2];
@@ -695,7 +698,7 @@ int main(int argc, char* argv[])
                      p_hat[1] = sth*sin(phi);
                      p_hat[2] = cth;
                      
-                     cross(p_hat,z_hat,f_hat);
+                     cross(p_hat, z_hat, f_hat);
                      normalize(f_hat);
                      //calc_g(g_dn,g_up,part_x0);
                      cth0 = fabs(p_hat[2]);
@@ -1606,9 +1609,8 @@ int main(int argc, char* argv[])
                         
                         E_f = dot_g4(g_up_ph, p_, p_);
 
-
-                        if (fabs(E_f) > 1e-10) { //check to see if re-normalization necessary
-                           printf("E_f > 1e-10 (%.2e) Normalizing...\n", E_f);
+                        if (fabs(E_f) > 0.1) { //check to see if re-normalization necessary
+                           printf("abs(E_f) > 0.1 (%.2e) Normalizing...\n", E_f);
                            renormalize_momentum(g_up_ph, yn);
                         }
                         
