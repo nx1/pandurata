@@ -57,31 +57,28 @@ void calc_e2(double e_lf[4][4], double w_lf[4][4], double g_up[4][4],
   double el,k0,k1,k2,k3,N1,N2,N3;
   int i,j,k;
 
-  el = part_p[3]/part_p[0];
-  k1 = part_v[1]/(part_v[0]+part_v[3]*el);
-  k2 = (g_up[0][0]+2.*g_up[0][3]*el+g_up[3][3]*el*el)/g_up[1][1];
-  k3 = 1.*(part_v[0]+k1*k2*part_v[1]+el*part_v[3]);
-  N1 = sqrt(g_dn[0][0]*el*el-2.*g_dn[0][3]*el+g_dn[3][3]);
-  N2 = sqrt(g_up[0][0]*k1*k1+2.*g_up[0][3]*k1*k1*el+
-	    g_up[1][1]+g_up[3][3]*k1*k1*el*el);
-  N3 = sqrt(pow(part_v[2],2.)*(g_up[0][0]+2.*g_up[0][3]*el+
-				  g_up[1][1]*k1*k1*k2*k2+g_up[3][3]*el*el)+
-	    g_up[2][2]*k3*k3);
+  el = part_p[3] / part_p[0];
+  k1 = part_v[1] / (part_v[0]+part_v[3]*el);
+  k2 = (g_up[0][0] + 2.*g_up[0][3]*el + g_up[3][3]*el*el) / g_up[1][1];
+  k3 = 1.*(part_v[0] + k1*k2*part_v[1] + el*part_v[3]);
+  N1 = sqrt(g_dn[0][0]*el*el - 2.*g_dn[0][3]*el+g_dn[3][3]);
+  N2 = sqrt(g_up[0][0]*k1*k1 + 2.*g_up[0][3]*k1*k1*el + g_up[1][1]+g_up[3][3]*k1*k1*el*el);
+  N3 = sqrt(pow(part_v[2], 2.)*(g_up[0][0]+2.*g_up[0][3]*el + g_up[1][1]*k1*k1*k2*k2+g_up[3][3]*el*el) + g_up[2][2]*k3*k3);
 
   for (j=0;j<=3;j++) e_lf[0][j]=part_v[j];
   e_lf[1][0] = (-g_up[0][0]*k1-el*g_up[0][3]*k1)/N2;
   e_lf[1][1] = g_up[1][1]/N2;
   e_lf[1][2] = 0.;
-  e_lf[1][3] = (-g_up[0][3]*k1-g_up[3][3]*el*k1)/N2;
-  e_lf[3][0] = (part_v[2]*g_up[0][0]+part_v[2]*g_up[0][3]*el)/N3;
-  e_lf[3][1] = g_up[1][1]*k1*k2*part_v[2]/N3;
-  e_lf[3][2] = -g_up[2][2]*k3/N3;
-  e_lf[3][3] = (part_v[2]*g_up[0][3]+part_v[2]*g_up[3][3]*el)/N3;
+  e_lf[1][3] = (-g_up[0][3]*k1-g_up[3][3]*el*k1) / N2;
+  e_lf[3][0] = (part_v[2]*g_up[0][0]+part_v[2]*g_up[0][3]*el) / N3;
+  e_lf[3][1] = g_up[1][1]*k1*k2*part_v[2] / N3;
+  e_lf[3][2] = -g_up[2][2]*k3 / N3;
+  e_lf[3][3] = (part_v[2]*g_up[0][3]+part_v[2]*g_up[3][3]*el) / N3;
   if (N1 > 0) {
-    e_lf[2][0] = -el/N1;
+    e_lf[2][0] = -el / N1;
     e_lf[2][1] = 0.;
     e_lf[2][2] = 0.;
-    e_lf[2][3] = 1./N1;
+    e_lf[2][3] = 1. / N1;
   } else {
     e_lf[2][0] = 0.;
     e_lf[2][1] = 0.;
@@ -92,8 +89,8 @@ void calc_e2(double e_lf[4][4], double w_lf[4][4], double g_up[4][4],
     for (j=0;j<=3;j++) {
       w_lf[i][j]=0;
       for (k=0;k<=3;k++) {
-	w_lf[i][j]+=g_dn[k][i]*e_lf[j][k];
-	//w_lf[i][j]+=g_dn[k][i]*g_up[j][k];
+        w_lf[i][j] += g_dn[k][i]*e_lf[j][k];
+        //w_lf[i][j]+=g_dn[k][i]*g_up[j][k];
       }
     }
   }

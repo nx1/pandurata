@@ -110,10 +110,10 @@ void renormalize_momentum(double g_up_ph[4][4], double yn[8]) {
         printf("Previous yn[4]: %.5e\n", yn[4]);
         if (fabs(s1 - yn[4]) < fabs(s2 - yn[4])) {
             yn[4] = s1;
-            printf("new yn[4]     : %.5e\n   (s1)\n", yn[4]);
+            printf("new yn[4]     : %.5e   (s1)\n", yn[4]);
         } else {
             yn[4] = s2;
-            printf("new yn[4]     : %.5e\n   (s2)\n", yn[4]);
+            printf("new yn[4]     : %.5e   (s2)\n", yn[4]);
         }
     }
 }
@@ -155,7 +155,8 @@ int main(int argc, char* argv[])
    double nui0[Ne_obs+1], dnui0[Ne_obs+1];
    double tt[Nth+1], pp[Nph+1], weights[12], wght;
 
-   double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8]; // position & momentum [t,r,theta,phi,p_t,p_r,p_theta,p_phi]
+   // position & momentum [t,r,theta,phi,p_t,p_r,p_theta,p_phi]
+   double y[8], y1[8], y2[8], yn[8], del[8], y_ck[8], del_ck[8]; 
    double e_x[3], e_y[3], x_[3], p_hat[3], r_hat[3], n_hat[3];
    double f_hat[3], fp_hat[3], z_hat[3], n_p_hat[3];
    double e_perp[3], e_parl[3], e_perp_f[3], e_parl_f[3];
@@ -554,11 +555,12 @@ int main(int argc, char* argv[])
          for (iph=iphstart; iph<=iphstop; iph+=iphstep) {
             srand(ibottom*(Nr+1)*(Nph+1)+ir*(Nph+1)+iph+RUN_ID*0);
 
+            // Set Initial Position (t, r, theta, phi)
             y0[0] = 0;       // Set time to 0
             y0[1] = rr[ir];  // Set r to current radius
-            if (ibottom == 0) y0[2] = emtop_ik[indexr(ir,iph)] - eps_th;  // Set theta to either top or bottom
+            if (ibottom == 0) y0[2] = emtop_ik[indexr(ir,iph)] - eps_th; 
             if (ibottom == 1) y0[2] = embot_ik[indexr(ir,iph)] + eps_th;
-            y0[3] = pp[iph]; // set phi to current
+            y0[3] = pp[iph]; // set phi to current index
             //lambda = (double)rand()/(RAND_MAX);
             //y0[3]=y0[3]+((int)(lambda*4.))*PI/2.;
             r = y0[1];
@@ -797,7 +799,7 @@ int main(int argc, char* argv[])
                         y0[2] = PI - th0 - ((double)it*(N+1)+(double)ip+1.)*dcth;
                      }
                      r = y0[1];
-                     t = y0[2];
+                     t = y0[2]; //using t as theta
                      f = y0[3];
                      for (j=0;j<=3;j++) part_x[j]=y0[j];
 
@@ -1059,12 +1061,16 @@ int main(int argc, char* argv[])
                   
                   //Stop the photon if it crosses the photosphere, the horizon,
                   //escapes the system, or takes too many steps.
-                  while ((yn[1]>1.02*Rhor)&&(yn[1]<Rshell*0.99999)&&(steps<1000)&&(A_fact>0)) {
+                  while ((yn[1]>1.02*Rhor) && (yn[1]<Rshell*0.99999) && (steps<1000) && (A_fact>0)) {
+
                      for (j=0;j<=7;j++) {
                         y[j]=yn[j];
                      }
-                     if (-yn[4]>e_max) A_fact = 0;
+
+                     if (-yn[4] > e_max) A_fact = 0;
+
                      acc = 0;
+
                      while ((acc < 1)&&(steps < 1010)) {
                         //calc_e4(e_lf,w_lf,g_up,g_dn,part_p,part_v,dx_r,dx_p,ibottom,&G_fact);
                         if (erro > 0) {
@@ -1152,10 +1158,12 @@ int main(int argc, char* argv[])
                            cth = cos(yn[2]);
                            sth = sin(yn[2]);
                            calc_g(g_dn_ph,g_up_ph,yn);
+
                            ph_v[0] = g_up_ph[0][0]*yn[4]+g_up_ph[0][3]*yn[7];
                            ph_v[1] = g_up_ph[1][1]*yn[5];
                            ph_v[2] = g_up_ph[2][2]*yn[6];
                            ph_v[3] = g_up_ph[0][3]*yn[4]+g_up_ph[3][3]*yn[7];
+
                            for (j=0;j<=3;j++) {
                               part_x[j]=yn[j];
                               k_[j]=ph_v[j];
@@ -1260,7 +1268,7 @@ int main(int argc, char* argv[])
                            lubksb_js(adata1,4,indx,bdata1);
                            for (j=0;j<=3;j++) f_[j]=bdata1[j+1];
                            
-                           calc_e2(e_lfs,w_lfs,g_up_ph,g_dn_ph,po_,v_);
+                           calc_e2(e_lfs, w_lfs, g_up_ph, g_dn_ph,po_,v_);
                            for (i=0;i<=3;i++) {
                               for (j=0;j<=3;j++) {
                                  adata1[i+1][j+1]=e_lfs[j][i];
@@ -1563,7 +1571,7 @@ int main(int argc, char* argv[])
                      
                      //update the photon position+momentum
                      for (j=0;j<=7;j++) {
-                        yn[j]=y2[j];
+                        yn[j] = y2[j];
                      }
                      
                      /****************PASSING THROUGH Z-AXIS********/
@@ -1579,7 +1587,7 @@ int main(int argc, char* argv[])
                      }
                      
                      //ALWAYS UPDATE THE COORDINATE TIME
-                     yn[0]=y[0]+dt;
+                     yn[0] = y[0] + dt;
                      
                      /*****************CORONAL SCATTERING*****************/
                      if ((just_scattered == 0)&&(yn[1] > 1.02*Rhor)&&(tau_es > 10)) {
@@ -1841,10 +1849,10 @@ int main(int argc, char* argv[])
                            // printf("E0 from g_mu:     E0=%.2e\n", E0);
 
                            ludcmp_js(adata1,4,indx,&dd);
-                           for (j=0;j<=3;j++) bdata1[j+1]=k_[j];
+                           for (j=0;j<=3;j++) bdata1[j+1] = k_[j];
                            lubksb_js(adata1,4,indx,bdata1);
-                           for (j=0;j<=3;j++) ph_v_hat[j]=bdata1[j+1];
-                           for (j=0;j<=3;j++) bdata1[j+1]=f_[j];
+                           for (j=0;j<=3;j++) ph_v_hat[j] = bdata1[j+1];
+                           for (j=0;j<=3;j++) bdata1[j+1] = f_[j];
                            lubksb_js(adata1,4,indx,bdata1);
                            for (j=0;j<=3;j++) f_v_hat[j]=bdata1[j+1];
 
@@ -1878,7 +1886,7 @@ int main(int argc, char* argv[])
                            boost(beta,n_hat,ph_v_hat);
                            boost(beta,n_hat,f_v_hat);
                            
-                           rdsh = ph_v_hat[0]/E_i;
+                           rdsh = ph_v_hat[0] / E_i;
                            for (j=0;j<=3;j++) ph_v_hat[j]=ph_v_hat[j]/rdsh;
                            for (iv=0;iv<=Ne;iv++) {
                               nu[iv] = nu[iv]*rdsh;
@@ -2104,7 +2112,7 @@ int main(int argc, char* argv[])
                               }
                            }
                         }
-                        yn[1]=1.01*Rhor;
+                        yn[1] = 1.01*Rhor;
                         Ncapt += 1.;
                         //printf("%g %g %d %d %12.5e\n", Nescape, Ncapt,it, ip, yn[1]);
                      }
