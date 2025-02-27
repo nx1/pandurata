@@ -6,9 +6,12 @@
 double dot_g4(double g_ab[4][4],double a[],double b[])
 {
   double dotp;
-  dotp = g_ab[0][0]*a[0]*b[0]+g_ab[0][3]*a[0]*b[3]+
-    g_ab[1][1]*a[1]*b[1]+g_ab[2][2]*a[2]*b[2]+
-    g_ab[3][0]*a[3]*b[0]+g_ab[3][3]*a[3]*b[3];
+  dotp = g_ab[0][0]*a[0]*b[0]
+       + g_ab[0][3]*a[0]*b[3]
+	   + g_ab[1][1]*a[1]*b[1]
+	   + g_ab[2][2]*a[2]*b[2]
+	   + g_ab[3][0]*a[3]*b[0]
+	   + g_ab[3][3]*a[3]*b[3];
   return dotp;
 }
 
