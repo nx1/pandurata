@@ -1078,8 +1078,13 @@ int main(int argc, char* argv[])
                         } else {
                            dt = 0.9*dt*pow((erro/err),0.25);
                         }
-                        if ((yn[1] < rr[Nr/2])&&(dt > yn[1]/20.)) dt = yn[1]/20.;
+                        if ((yn[1] < rr[Nr/2])&&(dt > yn[1]/20.)) {
+                           dt = yn[1]/20.;
+                        }
+                        printf("Step %ld: dt = %.6e, err = %.6e, yn = [%.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e]\n", steps, dt, err, yn[0], yn[1], yn[2], yn[3], yn[4], yn[5], yn[6], yn[7]);
+
                         cashkarp(dt,y,y_ck,del_ck);
+
                         for (j=0;j<=7;j++) {
                            del[j]=del_ck[j];
                            y2[j]=y_ck[j];
@@ -1104,6 +1109,7 @@ int main(int argc, char* argv[])
                         steps=steps+1;
                         //if (steps < 2000) fprintf(outfile,"%d %d %12.4e %12.4e %12.4e %12.4e\n",
                         //	       ip,steps,y[1],y[2],y[3],A_fact);
+                        printf("Step %ld: dt = %.3f, err = %.6e, yn = [%.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e]\n", steps, dt, err, yn[0], yn[1], yn[2], yn[3], yn[4], yn[5], yn[6], yn[7]);
                      }
                      /****************INTERSECTION WITH THE DISK****************/
                      if ((yn[1] < Rout)&&(y2[1] < Rout)&&(y2[1] > Rhor)&&(OPT_THIN == 0)) {
@@ -1540,7 +1546,7 @@ int main(int argc, char* argv[])
                            yn[4] = g_dn_ph[0][0]*ph_v_p[0]+g_dn_ph[0][3]*ph_v_p[3];
                            yn[5] = g_dn_ph[1][1]*ph_v_p[1];
                            yn[6] = g_dn_ph[2][2]*ph_v_p[2];
-                           yn[7] = g_dn_ph[0][3]*ph_v_p[0]+g_dn_ph[3][3]*ph_v_p[3];
+
                            E_f = -yn[4];
                            pdv_em = ph_v_p[0]*po_[0]+ph_v_p[1]*po_[1] + ph_v_p[2]*po_[2]+ph_v_p[3]*po_[3];
                            
@@ -1883,7 +1889,13 @@ int main(int argc, char* argv[])
                            n_hat[0] = sth*cos(f);
                            n_hat[1] = sth*sin(f);
                            n_hat[2] = cth;
+						   
+						   
+						   printf("Boost at 1888\n");
+                           printf("ph_v_hat before boost: %f %f %f %f\n", ph_v_hat[0], ph_v_hat[1], ph_v_hat[2], ph_v_hat[3]);
                            boost(beta,n_hat,ph_v_hat);
+						   printf("ph_v_hat after boost : %f %f %f %f\n", ph_v_hat[0], ph_v_hat[1], ph_v_hat[2], ph_v_hat[3]);
+						   
                            boost(beta,n_hat,f_v_hat);
                            
                            rdsh = ph_v_hat[0] / E_i;
@@ -1995,8 +2007,10 @@ int main(int argc, char* argv[])
                            //       E0,dot_g4(g_up_ph,p_,p_),dot_g4(g_dn_ph,v_,v_),yn[1],yn[2],rdsh);
                            //       sleep(1);
                            //}
-                           
+						   printf("Boost at 1998\n");
+                           printf("ph_v_hat before boost: %f %f %f %f\n", ph_v_hat[0], ph_v_hat[1], ph_v_hat[2], ph_v_hat[3]);
                            boost(beta,n_hat,ph_v_hat);
+						   printf("ph_v_hat after boost : %f %f %f %f\n", ph_v_hat[0], ph_v_hat[1], ph_v_hat[2], ph_v_hat[3]);
                            boost(beta,n_hat,f_v_hat);
 
                            rdsh = ph_v_hat[0] / E_f;
