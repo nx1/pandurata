@@ -463,6 +463,21 @@ def read_scat_spcp(filename, Nth_obs, Nph_obs, Ne):
     return Ispecp
 
 
+def read_gr_file(filename='gr_0624_new.dat'):
+    """Read the grid file gr_xxxx.dat"""
+    print(f'Reading {filename}')
+    with open(filename, 'r') as file:
+        Nr, Nt, Np = map(int, file.readline().split())
+        r_bins  = np.array(list(map(float, file.readline().split())))
+        th_bins = np.array(list(map(float, file.readline().split())))
+        ph_bins = np.array(list(map(float, file.readline().split())))
+
+    print(f'r     : {r_bins.min()} - {r_bins.max()} Nbins={Nr}')
+    print(f'theta : {th_bins.min()} - {th_bins.max()} Nbins={Nt}')
+    print(f'phi   : {ph_bins.min()} - {ph_bins.max()} Nbins={Np}')
+    print(f'Finished reading Grid file...')
+    return Nr, Nt, Np, r_bins, th_bins, ph_bins
+
 
 
 if __name__ == "__main__":

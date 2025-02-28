@@ -85,8 +85,8 @@ void m_mult3(double A[3][3], double B[3][3], double C[3][3])
 void renormalize_momentum(double g_up_ph[4][4], double yn[8]) {
     double za, zb, zc, zq, s1, s2;
 
-    printf("Renormalizing momentum...\n");
-    printf("Initial yn[4]: %.5e\n", yn[4]);
+    // printf("Renormalizing momentum...\n");
+    // printf("Initial yn[4]: %.5e\n", yn[4]);
 
     za = g_up_ph[0][0];
     zb = 2.0 * yn[7] * g_up_ph[0][3];
@@ -95,25 +95,24 @@ void renormalize_momentum(double g_up_ph[4][4], double yn[8]) {
        + yn[7] * yn[7] * g_up_ph[3][3];
     zq = zb * zb - 4 * za * zc;
 
-    printf("Computed values:\n");
-    printf("za: %.5e, zb: %.5e, zc: %.5e, zq: %.5e\n", za, zb, zc, zq);
+    // printf("za: %.5e, zb: %.5e, zc: %.5e, zq: %.5e\n", za, zb, zc, zq);
 
     if (zq < 0) {
-        printf("Normalization error: zq < 0 (%.5e), skipping renormalization.\n", zq);
+        // printf("Normalization error: zq < 0 (%.5e), skipping renormalization.\n", zq);
         return;
     }
 
     if (zq > 0) {
         s1 = (-zb + sqrt(zq)) / (2.0 * za);
         s2 = (-zb - sqrt(zq)) / (2.0 * za);
-        printf("Roots computed: s1 = %.5e, s2 = %.5e\n", s1, s2);
-        printf("Previous yn[4]: %.5e\n", yn[4]);
+        // printf("Roots computed: s1 = %.5e, s2 = %.5e\n", s1, s2);
+        // printf("Previous yn[4]: %.5e\n", yn[4]);
         if (fabs(s1 - yn[4]) < fabs(s2 - yn[4])) {
             yn[4] = s1;
-            printf("new yn[4]     : %.5e   (s1)\n", yn[4]);
+            // printf("new yn[4]     : %.5e   (s1)\n", yn[4]);
         } else {
             yn[4] = s2;
-            printf("new yn[4]     : %.5e   (s2)\n", yn[4]);
+            // printf("new yn[4]     : %.5e   (s2)\n", yn[4]);
         }
     }
 }
@@ -1110,7 +1109,7 @@ int main(int argc, char* argv[])
                         steps=steps+1;
                         //if (steps < 2000) fprintf(outfile,"%d %d %12.4e %12.4e %12.4e %12.4e\n",
                         //	       ip,steps,y[1],y[2],y[3],A_fact);
-						if (steps%10 == 0){
+						if (steps%100 == 0){
 							printf("Step %ld: dt = %.3f, err = %.6e, yn = [%.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f]\n", steps, dt, err, yn[0], yn[1], yn[2], yn[3], yn[4], yn[5], yn[6], yn[7]);
 						}
                      }
