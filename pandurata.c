@@ -1078,10 +1078,11 @@ int main(int argc, char* argv[])
                         } else {
                            dt = 0.9*dt*pow((erro/err),0.25);
                         }
-                        if ((yn[1] < rr[Nr/2])&&(dt > yn[1]/20.)) {
-                           dt = yn[1]/20.;
+                        if ((yn[1] < rr[Nr/2])&&(dt > yn[1]/200.)) {
+                           dt = yn[1]/200.;
+						   // printf("upper limit set for dt=%f\n", dt);
                         }
-                        printf("Step %ld: dt = %.6e, err = %.6e, yn = [%.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e]\n", steps, dt, err, yn[0], yn[1], yn[2], yn[3], yn[4], yn[5], yn[6], yn[7]);
+                        // printf("Step %ld: dt = %.3f, err = %.6e, yn = [%.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f]\n", steps, dt, err, yn[0], yn[1], yn[2], yn[3], yn[4], yn[5], yn[6], yn[7]);
 
                         cashkarp(dt,y,y_ck,del_ck);
 
@@ -1109,7 +1110,9 @@ int main(int argc, char* argv[])
                         steps=steps+1;
                         //if (steps < 2000) fprintf(outfile,"%d %d %12.4e %12.4e %12.4e %12.4e\n",
                         //	       ip,steps,y[1],y[2],y[3],A_fact);
-                        printf("Step %ld: dt = %.3f, err = %.6e, yn = [%.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e, %.6e]\n", steps, dt, err, yn[0], yn[1], yn[2], yn[3], yn[4], yn[5], yn[6], yn[7]);
+						if (steps%10 == 0){
+							printf("Step %ld: dt = %.3f, err = %.6e, yn = [%.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f]\n", steps, dt, err, yn[0], yn[1], yn[2], yn[3], yn[4], yn[5], yn[6], yn[7]);
+						}
                      }
                      /****************INTERSECTION WITH THE DISK****************/
                      if ((yn[1] < Rout)&&(y2[1] < Rout)&&(y2[1] > Rhor)&&(OPT_THIN == 0)) {
@@ -1624,7 +1627,7 @@ int main(int argc, char* argv[])
                         E_f = dot_g4(g_up_ph, p_, p_);
 
                         if (fabs(E_f) > 0.1) { //check to see if re-normalization necessary
-                           printf("abs(E_f) > 0.1 (%.2e) Normalizing...\n", E_f);
+                           printf("abs(E_f) > 0.1 (%.3f) Normalizing...\n", E_f);
                            renormalize_momentum(g_up_ph, yn);
                         }
                         

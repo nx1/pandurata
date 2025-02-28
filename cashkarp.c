@@ -12,17 +12,17 @@ void cashkarp(double dt, double y0[], double yn[], double del[])
   double c1=37./378.0,c2=0.0,c3=250./621.,c4=125./594.,c5=0.0,c6=512./1771.;
   double cs1=2825./27648.,cs2=0,cs3=18575./48384.,cs4=13525./55296.,
     cs5=277./14336.,cs6=0.25;
-  printf("\n\n\n\n\n\n======== start of cashkarp() dt=%lf ============\n", dt);
-  printf("Initial y0:\n");
-  for (i=0; i<=7; i++) printf("y0[%d] = %lf\n", i, y0[i]);
+  // printf("\n\n\n\n\n\n======== start of cashkarp() dt=%lf ============\n", dt);
+  // printf("Initial y0:\n");
+  // for (i=0; i<=7; i++) printf("y0[%d] = %lf\n", i, y0[i]);
 
   accel(y0,k1);
   for (i=0;i<=7;i++) {
     k1[i]=k1[i]*dt;
     yn[i]=y0[i]+b21*k1[i];
   }
-  printf("After k1 computation:\n");
-  for (i=0; i<=7; i++) printf("k1[%d] = %lf, yn[%d] = %lf\n", i, k1[i], i, yn[i]);
+  // printf("After k1 computation:\n");
+  // for (i=0; i<=7; i++) printf("k1[%d] = %lf, yn[%d] = %lf\n", i, k1[i], i, yn[i]);
 
 
   accel(yn,k2); 
@@ -30,16 +30,16 @@ void cashkarp(double dt, double y0[], double yn[], double del[])
     k2[i]=k2[i]*dt;
     yn[i]=y0[i]+b31*k1[i]+b32*k2[i];
   }
-  printf("After k2 computation:\n");
-  for (i=0; i<=7; i++) printf("k2[%d] = %lf, yn[%d] = %lf\n", i, k2[i], i, yn[i]);
+  // printf("After k2 computation:\n");
+  // for (i=0; i<=7; i++) printf("k2[%d] = %lf, yn[%d] = %lf\n", i, k2[i], i, yn[i]);
 
   accel(yn,k3); 
   for (i=0;i<=7;i++) {
     k3[i]=k3[i]*dt;
     yn[i]=y0[i]+b41*k1[i]+b42*k2[i]+b43*k3[i];
   } 
-  printf("After k3 computation:\n");
-  for (i=0; i<=7; i++) printf("k3[%d] = %lf, yn[%d] = %lf\n", i, k3[i], i, yn[i]);
+  // printf("After k3 computation:\n");
+  // for (i=0; i<=7; i++) printf("k3[%d] = %lf, yn[%d] = %lf\n", i, k3[i], i, yn[i]);
 
 
   accel(yn,k4); 
@@ -47,8 +47,8 @@ void cashkarp(double dt, double y0[], double yn[], double del[])
     k4[i]=k4[i]*dt;
     yn[i]=y0[i]+b51*k1[i]+b52*k2[i]+b53*k3[i]+b54*k4[i];
   } 
-  printf("After k4 computation:\n");
-  for (i=0; i<=7; i++) printf("k4[%d] = %lf, yn[%d] = %lf\n", i, k4[i], i, yn[i]);
+  // printf("After k4 computation:\n");
+  // for (i=0; i<=7; i++) printf("k4[%d] = %lf, yn[%d] = %lf\n", i, k4[i], i, yn[i]);
 
 
   accel(yn,k5); 
@@ -56,8 +56,8 @@ void cashkarp(double dt, double y0[], double yn[], double del[])
     k5[i]=k5[i]*dt;
     yn[i]=y0[i]+b61*k1[i]+b62*k2[i]+b63*k3[i]+b64*k4[i]+b65*k5[i];
   } 
-  printf("After k5 computation:\n");
-  for (i=0; i<=7; i++) printf("k5[%d] = %lf, yn[%d] = %lf\n", i, k5[i], i, yn[i]);
+  // printf("After k5 computation:\n");
+  // for (i=0; i<=7; i++) printf("k5[%d] = %lf, yn[%d] = %lf\n", i, k5[i], i, yn[i]);
 
 
   accel(yn,k6); 
@@ -68,8 +68,8 @@ void cashkarp(double dt, double y0[], double yn[], double del[])
     del[i]=yn[i]-yns[i];
   } 
 
-  printf("Final results:\n");
-  for (i=0; i<=7; i++) printf("yn[%d] = %lf, del[%d] = %e\n", i, yn[i], i, del[i]);
-  printf("======== end of cashkarp()  dt=%lf ============ \n", dt);
+  // printf("Final results:\n");
+  // for (i=0; i<=7; i++) printf("yn[%d] = %lf, del[%d] = %e\n", i, yn[i], i, del[i]);
+  // printf("======== end of cashkarp()  dt=%lf ============ \n", dt);
 }
 
