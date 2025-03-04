@@ -1,15 +1,21 @@
 # New 01/03/2025
 `debug.html` : notes from debugging (open in browser).
+
 `makefile` : added a compile with debug mode (set DEBUG=1) in the makefile, this allows it to be run with `gdb ./pandurata` (see below)
+
 `pandurata.c` :
     1. Renormalized photon momentum moved to renormalize_momentum()
     2. dt = yn[1]/20.;    --> dt = yn[1]/200.;
     3. debug prints + comments 
 
 `/data/read_pandurata.py` : Contains function for reading pandurata output files.
+
 `/notebooks/'Pandurata_ULX_old.ipynb` : Contains plotting functions for the output files.
+
 `/notebooks/'Pandurata_ULX_new.ipynb` : Contains plotting functions for the output files but is on the new output data.
+
 `scripts/plot_cyclotron_supression.py` : was unsure what the cyclotron supression function was doing.
+
 `readme.MD` : See below 
 
 
