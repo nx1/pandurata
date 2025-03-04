@@ -1,3 +1,18 @@
+# New 01/03/2025
+`debug.html` : notes from debugging (open in browser).
+`makefile` : added a compile with debug mode (set DEBUG=1) in the makefile, this allows it to be run with `gdb ./pandurata` (see below)
+`pandurata.c` :
+    1. Renormalized photon momentum moved to renormalize_momentum()
+    2. dt = yn[1]/20.;    --> dt = yn[1]/200.;
+    3. debug prints + comments 
+
+`/data/read_pandurata.py` : Contains function for reading pandurata output files.
+`/notebooks/'Pandurata_ULX_old.ipynb` : Contains plotting functions for the output files.
+`/notebooks/'Pandurata_ULX_new.ipynb` : Contains plotting functions for the output files but is on the new output data.
+`scripts/plot_cyclotron_supression.py` : was unsure what the cyclotron supression function was doing.
+`readme.MD` : See below 
+
+
 This is the version of Pandurata that was used in Schnittman, Krolik, and Noble (2013) [ApJ 769, 156]
 It uses the IDL routine read_harm3d_data2 to process the output data from Harm3d found in /rawdata, re-writing it in a Pandurata-friendly form in /data
 in /data, we need to convert the ascii data to binary via 
@@ -22,18 +37,7 @@ This will generate a bunch of data files in /data
 # Python
 pip install -r requirements.txt
 
-
-# panhead.h
-included in c files, contains inputs
-
-# pandurata.c vs pandurata_23Jan25.c
-
 # dat files
-
-
-The 4 digit number xxxx.dat comes from 48 ('0') + the value of k,h,d \& u
-                   khdu.dat (is this just the timesetep) ?
-
 
 Inputs (converted to .bin):
 bb_0624_new.dat        
