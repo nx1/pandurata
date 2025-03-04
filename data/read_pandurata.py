@@ -508,3 +508,5 @@ if __name__ == "__main__":
     phimage, phimagex, phimagey = read_scat_ithp(filename='scat_ithp.0624.dat', Nth_obs=Nth_obs, Nph_obs=Nph_obs, Ni=Ni)
     print('====')
     Ispecp = read_scat_spcp(filename='scat_spcp.0624.dat', Nth_obs=Nth_obs, Nph_obs=Nph_obs, Ne=Ne)
+    print('====')
+    Nr, Nt, Np, r_bins, th_bins, ph_bins = read_gr_file(filename='gr_0624_new.dat')
