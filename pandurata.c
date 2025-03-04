@@ -1548,6 +1548,7 @@ int main(int argc, char* argv[])
                            yn[4] = g_dn_ph[0][0]*ph_v_p[0]+g_dn_ph[0][3]*ph_v_p[3];
                            yn[5] = g_dn_ph[1][1]*ph_v_p[1];
                            yn[6] = g_dn_ph[2][2]*ph_v_p[2];
+                           yn[7] = g_dn_ph[0][3]*ph_v_p[0] + g_dn_ph[3][3]*ph_v_p[3];
 
                            E_f = -yn[4];
                            pdv_em = ph_v_p[0]*po_[0]+ph_v_p[1]*po_[1] + ph_v_p[2]*po_[2]+ph_v_p[3]*po_[3];
