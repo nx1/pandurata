@@ -27,6 +27,7 @@ in /data, we need to convert the ascii data to binary via
 
 compile Pandurata in the main directory via
 > make -f makepan
+
 > ./pandurata
 
 clean files using
@@ -34,6 +35,7 @@ clean files using
 
 To run in debug mode using gdb make using
 > make -f makepan DEBUG=1
+
 > gdb ./pandurata
 
 breakpoints can be set using break main 
